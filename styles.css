@@ -624,8 +624,9 @@ body {
 
 /* Small back button variant (for in-module top placement) */
 .btn-small {
-    padding: 8px 16px;
+    padding: 12px 18px;
     font-size: 0.875rem;
+    min-height: 44px;
 }
 
 /* Top-of-module back button (for quiz/expect header area) */
@@ -801,10 +802,21 @@ body {
     line-height: 1.5;
 }
 
-.choice-btn:hover:not(:disabled) {
-    border-color: var(--einstein-blue);
-    background: var(--blue-tint);
-    transform: translateX(8px);
+/* Only apply hover effects on pointer devices (not touch) */
+@media (hover: hover) {
+    .choice-btn:hover:not(:disabled) {
+        border-color: var(--einstein-blue);
+        background: var(--blue-tint);
+        transform: translateX(8px);
+    }
+}
+
+/* On touch devices, use active state instead */
+@media (hover: none) {
+    .choice-btn:active:not(:disabled) {
+        border-color: var(--einstein-blue);
+        background: var(--blue-tint);
+    }
 }
 
 .choice-letter {
@@ -996,7 +1008,8 @@ body {
 }
 
 .rating-btn {
-    padding: var(--space-sm) var(--space-md);
+    padding: 12px var(--space-md);
+    min-height: 44px;
     background: var(--white);
     border: 2px solid var(--border-light);
     border-radius: var(--radius-full);
@@ -1190,9 +1203,11 @@ body {
     line-height: 1.5;
 }
 
-.quiz-option:hover:not(:disabled) {
-    border-color: var(--einstein-blue);
-    background: var(--blue-tint);
+@media (hover: hover) {
+    .quiz-option:hover:not(:disabled) {
+        border-color: var(--einstein-blue);
+        background: var(--blue-tint);
+    }
 }
 
 .quiz-option.correct {
@@ -1614,14 +1629,92 @@ body {
         width: 100%;
     }
 
-    .rating-buttons {
-        justify-content: center;
+    /* Stack module nav buttons vertically on narrow screens */
+    .module-nav {
+        flex-direction: column-reverse;
+        gap: var(--space-sm);
+    }
+
+    .module-nav .btn {
         width: 100%;
     }
 
+    .rating-buttons {
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
     .rating-btn {
-        padding: var(--space-sm);
-        font-size: 0.8rem;
+        padding: 14px var(--space-md);
+        font-size: 0.9rem;
+        width: 100%;
+        min-height: 48px;
+    }
+
+    .pro-tip-content {
+        padding: var(--space-lg);
+        max-width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .easter-egg-content {
+        padding: var(--space-lg);
+        max-width: calc(100vw - var(--space-lg) * 2);
+    }
+
+    .pro-tip-content h3,
+    .easter-egg-content h3 {
+        font-size: 1.25rem;
+    }
+
+    .pro-tip-content > p,
+    .easter-egg-content p {
+        font-size: 1rem;
+    }
+
+    /* Dev nav gets tiny on small phones */
+    .dev-nav-toggle {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.7rem;
+    }
+
+    .dev-nav-panel {
+        width: calc(100vw - var(--space-md) * 2);
+        max-width: 280px;
+    }
+}
+
+/* Landscape orientation on short phones — compact header */
+@media (max-height: 500px) and (orientation: landscape) {
+    .trust-bar {
+        display: none;
+    }
+
+    .header-content {
+        padding: var(--space-xs) var(--space-md);
+    }
+
+    .header-logo {
+        height: 28px;
+    }
+
+    .truck-progress-container {
+        height: 20px;
+    }
+
+    .main-content {
+        padding-top: 60px;
+    }
+
+    .module {
+        padding-top: var(--space-md);
+        padding-bottom: var(--space-md);
+    }
+
+    /* Hide dev nav in landscape — not enough space */
+    .dev-nav-panel.hidden {
+        display: none;
     }
 }
 
