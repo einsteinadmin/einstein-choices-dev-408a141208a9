@@ -207,7 +207,7 @@ body {
 
 /* ===== Trust Bar — static, scrolls with content ===== */
 .trust-bar {
-    margin-top: 68px;
+    margin-top: 112px;
     background: var(--white);
     border-bottom: 1px solid var(--border-light);
     display: flex;
@@ -225,9 +225,11 @@ body {
 }
 
 .trust-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     color: var(--einstein-orange);
+    stroke-width: 2.25;
+    flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
@@ -1513,6 +1515,10 @@ body {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
+    .trust-bar {
+        margin-top: 88px;
+    }
+
     .header-content {
         padding: var(--space-sm) var(--space-md);
     }
