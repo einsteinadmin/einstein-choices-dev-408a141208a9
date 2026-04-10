@@ -111,12 +111,19 @@ class HybridTraining {
             choices: 'video-choices',
             congrats: 'video-congrats'
         };
+        const titleMap = {
+            welcome: 'Welcome to Einstein Moving Company',
+            culture: 'Why Culture Wins — Einstein Moving Company',
+            choices: 'The CHOICES Framework — Einstein Moving Company',
+            congrats: 'Congratulations — Einstein Moving Company'
+        };
 
         const wrapper = document.getElementById(wrapperMap[key]);
         if (wrapper) {
             wrapper.innerHTML = `
                 <iframe
                     src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1"
+                    title="${titleMap[key]}"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>
                 </iframe>
@@ -184,8 +191,9 @@ class HybridTraining {
         document.getElementById('toggleReference')?.addEventListener('click', (e) => {
             const btn = e.currentTarget;
             const panel = document.getElementById('referencePanel');
-            btn.classList.toggle('open');
+            const isOpen = btn.classList.toggle('open');
             panel.classList.toggle('hidden');
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
 
         // Pro tip modal
@@ -276,6 +284,12 @@ class HybridTraining {
     updateProgress() {
         const progress = (this.currentModule / (this.totalModules - 1)) * 100;
         document.getElementById('progressBar').style.width = `${progress}%`;
+
+        // Update aria-valuenow for screen readers
+        const progressContainer = document.getElementById('trainingProgress');
+        if (progressContainer) {
+            progressContainer.setAttribute('aria-valuenow', Math.round(progress));
+        }
 
         // Putter the truck along the road
         const truck = document.getElementById('truckIcon');
@@ -400,15 +414,15 @@ class HybridTraining {
             <div class="scenario">
                 <div class="scenario-value-badge">${scenario.value}: ${scenario.valueDescription}</div>
                 <div class="scenario-setup">${scenario.setup.replace(/\n/g, '<br>')}</div>
-                <div class="scenario-choices">
+                <div class="scenario-choices" role="radiogroup" aria-label="Choose your response">
                     ${scenario.choices.map(choice => `
-                        <button class="choice-btn" data-choice="${choice.id}">
-                            <span class="choice-letter">${choice.id.toUpperCase()}</span>
+                        <button class="choice-btn" data-choice="${choice.id}" aria-label="Option ${choice.id.toUpperCase()}: ${choice.text.replace(/"/g, '&quot;')}">
+                            <span class="choice-letter" aria-hidden="true">${choice.id.toUpperCase()}</span>
                             ${choice.text}
                         </button>
                     `).join('')}
                 </div>
-                <div class="scenario-feedback-area"></div>
+                <div class="scenario-feedback-area" aria-live="polite" aria-atomic="true"></div>
             </div>
         `;
 
@@ -516,12 +530,12 @@ class HybridTraining {
         // Only initialize if empty
         if (grid.children.length === 0) {
             grid.innerHTML = CHOICES_VALUES.map(v => `
-                <div class="assessment-item" data-value="${v.letter}">
-                    <span class="assessment-value-name">${v.value}</span>
+                <div class="assessment-item" data-value="${v.letter}" role="radiogroup" aria-label="Rate yourself on ${v.value}">
+                    <span class="assessment-value-name" id="rating-label-${v.letter}">${v.value}</span>
                     <div class="rating-buttons">
-                        <button class="rating-btn" data-rating="strength">Natural Strength</button>
-                        <button class="rating-btn" data-rating="working">Working On It</button>
-                        <button class="rating-btn" data-rating="growth">Needs Work</button>
+                        <button class="rating-btn" data-rating="strength" aria-pressed="false">Natural Strength</button>
+                        <button class="rating-btn" data-rating="working" aria-pressed="false">Working On It</button>
+                        <button class="rating-btn" data-rating="growth" aria-pressed="false">Needs Work</button>
                     </div>
                 </div>
             `).join('');
@@ -555,10 +569,12 @@ class HybridTraining {
         // Clear previous selection in this row
         item.querySelectorAll('.rating-btn').forEach(b => {
             b.classList.remove('selected', 'strength', 'working', 'growth');
+            b.setAttribute('aria-pressed', 'false');
         });
 
         // Set new selection
         btn.classList.add('selected', rating);
+        btn.setAttribute('aria-pressed', 'true');
 
         // Save rating
         this.assessmentRatings[value] = rating;
