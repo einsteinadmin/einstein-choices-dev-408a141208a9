@@ -521,7 +521,7 @@ class HybridTraining {
                     <div class="rating-buttons">
                         <button class="rating-btn" data-rating="strength">Natural Strength</button>
                         <button class="rating-btn" data-rating="working">Working On It</button>
-                        <button class="rating-btn" data-rating="growth">Growth Edge</button>
+                        <button class="rating-btn" data-rating="growth">Needs Work</button>
                     </div>
                 </div>
             `).join('');

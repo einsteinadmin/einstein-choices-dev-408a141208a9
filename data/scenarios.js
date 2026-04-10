@@ -1,6 +1,7 @@
 // Einstein CHOICES Training - Scenario Data
 // V2 — 18 scenarios (2-3 per value) for prototype review
 // Cameron + Anne will select final 7 for production
+// Correct answer distribution: 6A / 6B / 6C — intentionally shuffled
 
 const SCENARIOS = [
     // ==========================================
@@ -16,13 +17,6 @@ What do you do?`,
         choices: [
             {
                 id: "a",
-                text: "Keep working and tell them at the end — no point stressing them out now",
-                grade: "C",
-                feedback: `The customer had dinner plans at 7. They missed them. They're now hangry AND furious, writing a 1-star review while you wrap their last box. The office gets blindsided with an angry call. Everyone's day is ruined because of delayed honesty. Bad news doesn't age well.`,
-                xp: 0
-            },
-            {
-                id: "b",
                 text: "Stop, make eye contact, explain the situation honestly, offer options, and update the office",
                 grade: "A",
                 feedback: `THIS is the Einstein way.
@@ -33,6 +27,13 @@ The customer exhales. They can adjust their plans. The office is in the loop. Tr
                 xp: 100
             },
             {
+                id: "b",
+                text: "Keep working and tell them at the end — no point stressing them out now",
+                grade: "C",
+                feedback: `The customer had dinner plans at 7. They missed them. They're now hangry AND furious, writing a 1-star review while you wrap their last box. The office gets blindsided with an angry call. Everyone's day is ruined because of delayed honesty. Bad news doesn't age well.`,
+                xp: 0
+            },
+            {
                 id: "c",
                 text: "Call the office but don't tell the customer yet — let them handle it",
                 grade: "B",
@@ -40,7 +41,7 @@ The customer exhales. They can adjust their plans. The office is in the loop. Tr
                 xp: 50
             }
         ],
-        correctChoice: "b",
+        correctChoice: "a",
         proTip: "The longer you wait to share a problem, the bigger it gets. Customers can handle honest updates — what they can't handle is surprises at the end."
     },
     {
@@ -53,29 +54,29 @@ What do you do?`,
         choices: [
             {
                 id: "a",
+                text: "Mention it to your crew lead and let them decide whether to tell the customer",
+                grade: "B",
+                feedback: `Good instinct to loop someone in. But you're passing the hard conversation to someone else. The customer respects the person who owns it directly. Your crew lead will appreciate you handling it — not dumping it on them.`,
+                xp: 50
+            },
+            {
+                id: "b",
                 text: "Say nothing — it's a tiny scuff and the customer probably won't notice for weeks",
                 grade: "C",
                 feedback: `Maybe they won't notice today. But they will eventually. And when they call to file a claim, there's no documentation, no context, and now it looks like you tried to hide it. Your teammate saw it happen — now they're wondering what kind of crew they're on. Silence isn't a strategy. It's a gamble.`,
                 xp: 0
             },
             {
-                id: "b",
+                id: "c",
                 text: "Tell the customer right away, document it, and report it to the office",
                 grade: "A",
                 feedback: `"Hey, I want to let you know — I caught the doorframe coming through with your mirror. There's a small scuff on the trim. I've already documented it and I'll report it to the office."
 
 The customer's reaction? Almost always: "Thanks for telling me." Honesty when no one's watching is the highest form of professionalism. That's what earns trust you can't buy.`,
                 xp: 100
-            },
-            {
-                id: "c",
-                text: "Mention it to your crew lead and let them decide whether to tell the customer",
-                grade: "B",
-                feedback: `Good instinct to loop someone in. But you're passing the hard conversation to someone else. The customer respects the person who owns it directly. Your crew lead will appreciate you handling it — not dumping it on them.`,
-                xp: 50
             }
         ],
-        correctChoice: "b",
+        correctChoice: "c",
         proTip: "Your reputation is built in the moments when no one's watching. One honest conversation about a scuff builds more trust than a hundred perfect moves."
     },
     {
@@ -88,17 +89,17 @@ What do you do?`,
         choices: [
             {
                 id: "a",
-                text: "Pull your teammate aside privately: \"Hey, I don't think 3 is realistic — we should give them a more honest timeline so they're not surprised.\"",
-                grade: "A",
-                feedback: `You didn't throw your teammate under the bus in front of the customer. You didn't let a bad promise stand either. A quick sidebar, an adjusted expectation, and everyone's set up for success. This is what professional communication looks like within a crew — direct, private, and focused on the customer's experience.`,
-                xp: 100
-            },
-            {
-                id: "b",
                 text: "Don't say anything — your teammate made the promise, let them deal with it when it doesn't happen",
                 grade: "C",
                 feedback: `Now it's 3:15. The customer is confused. "Your partner said 3..." Your teammate is scrambling. The crew looks disorganized. You knew this was coming and said nothing. The customer doesn't care whose promise it was — they see ONE team that didn't deliver.`,
                 xp: 0
+            },
+            {
+                id: "b",
+                text: "Pull your teammate aside privately: \"Hey, I don't think 3 is realistic — we should give them a more honest timeline so they're not surprised.\"",
+                grade: "A",
+                feedback: `You didn't throw your teammate under the bus in front of the customer. You didn't let a bad promise stand either. A quick sidebar, an adjusted expectation, and everyone's set up for success. This is what professional communication looks like within a crew — direct, private, and focused on the customer's experience.`,
+                xp: 100
             },
             {
                 id: "c",
@@ -108,7 +109,7 @@ What do you do?`,
                 xp: 50
             }
         ],
-        correctChoice: "a",
+        correctChoice: "b",
         proTip: "If you hear something that's going to set the customer up for disappointment, address it with your crew first — privately. One crew, one message."
     },
 
@@ -136,17 +137,6 @@ When you get to the truck, you're not out of breath. You can immediately assess 
             },
             {
                 id: "b",
-                text: "Walk at a normal pace — you're already working hard, no need to rush",
-                grade: "C",
-                feedback: `The customer watches you stroll past while Marcus jogs by a second time.
-
-"Why is that guy moving so slow?" they think. "Am I paying by the hour for that?"
-
-Walking looks lazy even when you're working hard. Perception matters. The customer doesn't feel your sore muscles — they just see your pace. Also, now Marcus is carrying more than you. Not cool.`,
-                xp: 0
-            },
-            {
-                id: "c",
                 text: "Sprint back to the truck — time is money!",
                 grade: "B",
                 feedback: `ZOOM! You're a blur of efficiency!
@@ -155,6 +145,17 @@ Walking looks lazy even when you're working hard. Perception matters. The custom
 
 Rushing leads to mistakes. Mistakes lead to injuries. Injuries lead to claims. Fast is great, but controlled is essential.`,
                 xp: 50
+            },
+            {
+                id: "c",
+                text: "Walk at a normal pace — you're already working hard, no need to rush",
+                grade: "C",
+                feedback: `The customer watches you stroll past while Marcus jogs by a second time.
+
+"Why is that guy moving so slow?" they think. "Am I paying by the hour for that?"
+
+Walking looks lazy even when you're working hard. Perception matters. The customer doesn't feel your sore muscles — they just see your pace. Also, now Marcus is carrying more than you. Not cool.`,
+                xp: 0
             }
         ],
         correctChoice: "a",
@@ -170,21 +171,21 @@ Your body wants to walk. What do you do?`,
         choices: [
             {
                 id: "a",
-                text: "Match the pace you've had all day — controlled jog, purposeful movement. Take water breaks when you need them, but keep the energy consistent.",
-                grade: "A",
-                feedback: `THIS is what separates professionals. Anyone can hustle at 8 AM with fresh legs. Hustling at 5:30 when you're running on fumes? That's discipline.
-
-The customer notices. Your teammate notices. And when you're done, you'll be proud of how you finished — not just how you started. Sustainable means you can keep going safely — take your water breaks, watch for heat signs in yourself and your crew, but keep that controlled urgency all the way to the end.`,
-                xp: 100
-            },
-            {
-                id: "b",
                 text: "Slow down to a walk — you've been working hard all day and you're running out of gas",
                 grade: "C",
                 feedback: `The customer watches you downshift from a jog to a stroll. "Is that guy slowing down?" They check the time. They start worrying about how much longer this is going to take.
 
 Your teammate is carrying the same load, same heat, same fatigue — but still moving. Now there's a gap. The last 30 minutes shouldn't undo 10 hours of good work.`,
                 xp: 0
+            },
+            {
+                id: "b",
+                text: "Match the pace you've had all day — controlled jog, purposeful movement. Take water breaks when you need them, but keep the energy consistent.",
+                grade: "A",
+                feedback: `THIS is what separates professionals. Anyone can hustle at 8 AM with fresh legs. Hustling at 5:30 when you're running on fumes? That's discipline.
+
+The customer notices. Your teammate notices. And when you're done, you'll be proud of how you finished — not just how you started. Sustainable means you can keep going safely — take your water breaks, watch for heat signs in yourself and your crew, but keep that controlled urgency all the way to the end.`,
+                xp: 100
             },
             {
                 id: "c",
@@ -196,7 +197,7 @@ Hustle is about consistent, controlled effort — not a final sprint. And never 
                 xp: 50
             }
         ],
-        correctChoice: "a",
+        correctChoice: "b",
         proTip: "How you finish is how people remember you. Keep the pace, take your water breaks, and never sacrifice safety for speed — especially at the end of a long day."
     },
 
@@ -267,21 +268,21 @@ You just invested in someone's career AND protected every future customer's couc
             },
             {
                 id: "b",
-                text: "Fix it yourself — it's faster to just do it right",
-                grade: "B",
-                feedback: `The couch is protected. But tomorrow, he wraps another couch the same wrong way. And the day after that. You solved today's problem but passed it to every future crew he's on.
-
-Quick fixes feel efficient but they're just deferred problems.`,
-                xp: 50
-            },
-            {
-                id: "c",
                 text: "Let it go — he'll figure it out eventually, and it's not your job to train people",
                 grade: "C",
                 feedback: `"Not my job" is the most expensive phrase at any company. That poorly wrapped couch shifts in transit, a cushion gets stained, and now there's a claim. He doesn't learn, makes the same mistakes next week, and the crew lead wonders why nobody said anything.
 
 Taking ownership means owning the outcome, not just your tasks.`,
                 xp: 0
+            },
+            {
+                id: "c",
+                text: "Fix it yourself — it's faster to just do it right",
+                grade: "B",
+                feedback: `The couch is protected. But tomorrow, he wraps another couch the same wrong way. And the day after that. You solved today's problem but passed it to every future crew he's on.
+
+Quick fixes feel efficient but they're just deferred problems.`,
+                xp: 50
             }
         ],
         correctChoice: "a",
@@ -297,12 +298,12 @@ What do you do?`,
         choices: [
             {
                 id: "a",
-                text: "Find your crew lead, show them the scuff, document it with a photo, and tell the customer together",
-                grade: "A",
-                feedback: `This is ownership at its core. You caused it, you own it, you address it. Your crew lead has your back because you didn't try to hide it. The customer respects the honesty. The claim process is clean.
+                text: "Take a photo for yourself just in case, but don't say anything unless the customer brings it up",
+                grade: "B",
+                feedback: `The documentation instinct is smart. But you're preparing a defense instead of doing the right thing. If the customer finds it later, your photo proves you KNEW and didn't say anything. That's worse than no photo at all.
 
-Ownership means the hardest conversations are the ones you have FIRST, not last.`,
-                xp: 100
+Own it in the moment, not after the fact.`,
+                xp: 50
             },
             {
                 id: "b",
@@ -315,15 +316,15 @@ Ownership means you don't leave problems for other people to discover.`,
             },
             {
                 id: "c",
-                text: "Take a photo for yourself just in case, but don't say anything unless the customer brings it up",
-                grade: "B",
-                feedback: `The documentation instinct is smart. But you're preparing a defense instead of doing the right thing. If the customer finds it later, your photo proves you KNEW and didn't say anything. That's worse than no photo at all.
+                text: "Find your crew lead, show them the scuff, document it with a photo, and tell the customer together",
+                grade: "A",
+                feedback: `This is ownership at its core. You caused it, you own it, you address it. Your crew lead has your back because you didn't try to hide it. The customer respects the honesty. The claim process is clean.
 
-Own it in the moment, not after the fact.`,
-                xp: 50
+Ownership means the hardest conversations are the ones you have FIRST, not last.`,
+                xp: 100
             }
         ],
-        correctChoice: "a",
+        correctChoice: "c",
         proTip: "The hardest time to take ownership is when no one's watching and you could get away with it. That's also when it matters most."
     },
 
@@ -381,15 +382,6 @@ What do you say?`,
         choices: [
             {
                 id: "a",
-                text: "\"Good move. But I noticed we lost some time on the staircase with that sectional — I think if we'd broken it down first it would've been smoother. What do you think?\"",
-                grade: "A",
-                feedback: `You just turned a good day into a learning moment. Your crew lead sees someone who doesn't coast on success — someone who's always looking for the 1% improvement.
-
-Even on your best days, there's always something to sharpen. That mindset compounds over time. A year from now, you're operating at a completely different level.`,
-                xp: 100
-            },
-            {
-                id: "b",
                 text: "\"Good, no issues.\"",
                 grade: "B",
                 feedback: `Accurate? Sure. But you just closed the door on a coaching conversation your crew lead was inviting. "No issues" means "I'm not thinking about how to get better."
@@ -398,16 +390,25 @@ The best movers treat every job as a film session — what worked, what didn't, 
                 xp: 50
             },
             {
-                id: "c",
+                id: "b",
                 text: "\"It was fine. Ready to be done though.\"",
                 grade: "C",
                 feedback: `Your crew lead was reaching out, and you shut it down. "Fine" and "ready to be done" tells them you're clocked out mentally. They'll stop asking. And when they stop asking, you stop growing.
 
 The gap between good and great isn't talent — it's whether you keep pushing when things are already going well.`,
                 xp: 0
+            },
+            {
+                id: "c",
+                text: "\"Good move. But I noticed we lost some time on the staircase with that sectional — I think if we'd broken it down first it would've been smoother. What do you think?\"",
+                grade: "A",
+                feedback: `You just turned a good day into a learning moment. Your crew lead sees someone who doesn't coast on success — someone who's always looking for the 1% improvement.
+
+Even on your best days, there's always something to sharpen. That mindset compounds over time. A year from now, you're operating at a completely different level.`,
+                xp: 100
             }
         ],
-        correctChoice: "a",
+        correctChoice: "c",
         proTip: "Don't wait for something to go wrong to look for improvement. The best time to ask 'what could be better?' is when everything went right."
     },
 
@@ -433,21 +434,21 @@ At Disney, they call this kind of attention to detail "bumping the lamp" — a r
             },
             {
                 id: "b",
-                text: "Lift and go — be efficient, the customer's waiting",
-                grade: "C",
-                feedback: `SCRRRATCH. That's the bookshelf's metal feet carving a groove into $15,000 worth of refinished hardwood.
-
-The customer comes back from their call to find you frozen over their damaged floor. Now there's a claim, an angry customer, and a conversation nobody wants to have. All because you saved 30 seconds.`,
-                xp: 0
-            },
-            {
-                id: "c",
                 text: "Lift it high enough to clear the floor — hardwood is tough, it'll be fine",
                 grade: "B",
                 feedback: `"It'll be fine" — the three most dangerous words on a move. Hardwood IS tough. But your grip shifts, a metal foot grazes the surface, and now there's a scratch you could have prevented.
 
 Conscientious means never assuming. We don't hope floors are tough — we protect them because they're expensive and they matter to the customer.`,
                 xp: 50
+            },
+            {
+                id: "c",
+                text: "Lift and go — be efficient, the customer's waiting",
+                grade: "C",
+                feedback: `SCRRRATCH. That's the bookshelf's metal feet carving a groove into $15,000 worth of refinished hardwood.
+
+The customer comes back from their call to find you frozen over their damaged floor. Now there's a claim, an angry customer, and a conversation nobody wants to have. All because you saved 30 seconds.`,
+                xp: 0
             }
         ],
         correctChoice: "a",
@@ -463,21 +464,21 @@ How thorough is your walk-through?`,
         choices: [
             {
                 id: "a",
-                text: "Open every closet, check every shelf, look behind every door, check the garage and the attic. If there's a space, you check it.",
-                grade: "A",
-                feedback: `You find the box of family photos on the top shelf of the hall closet. The one they forgot about. The one that would have caused a tearful phone call at 9 PM tonight.
-
-Conscientious means checking the spaces people forget exist. Every closet, every cabinet, every shelf. The walk-through isn't a formality — it's your last chance to be thorough.`,
-                xp: 100
-            },
-            {
-                id: "b",
                 text: "Quick glance in each room from the doorway — everything looks clear",
                 grade: "C",
                 feedback: `You lock up and drive away. Two hours later, dispatch calls: the customer found a box of baby clothes in the nursery closet and a set of dishes in the top kitchen cabinet. Now someone has to drive back.
 
 The customer is upset. Your crew lead is frustrated. A 2-minute walk-through would have caught both. "Looks clear from the doorway" is not a walk-through.`,
                 xp: 0
+            },
+            {
+                id: "b",
+                text: "Open every closet, check every shelf, look behind every door, check the garage and the attic. If there's a space, you check it.",
+                grade: "A",
+                feedback: `You find the box of family photos on the top shelf of the hall closet. The one they forgot about. The one that would have caused a tearful phone call at 9 PM tonight.
+
+Conscientious means checking the spaces people forget exist. Every closet, every cabinet, every shelf. The walk-through isn't a formality — it's your last chance to be thorough.`,
+                xp: 100
             },
             {
                 id: "c",
@@ -489,7 +490,7 @@ You checked 80% of the house thoroughly — but conscientious means 100%. The sp
                 xp: 50
             }
         ],
-        correctChoice: "a",
+        correctChoice: "b",
         proTip: "Walk every room. Open every door. Check every shelf. The customer trusts you with the last look at their home — make it count."
     },
 
@@ -558,21 +559,21 @@ Moving is one of the most stressful days in a family's life — and you just mad
             },
             {
                 id: "b",
-                text: "Keep walking — it's not your place to talk to their kid and you've got boxes to move",
-                grade: "B",
-                feedback: `Fair — you're there to move furniture, not play therapist. But Einstein movers aren't just laborers. The best crews read the room and find small moments to make hard days easier.
-
-You don't have to solve the family's stress. But a kind word costs nothing and changes everything.`,
-                xp: 50
-            },
-            {
-                id: "c",
                 text: "Ignore it — kids cry, it's not your problem",
                 grade: "C",
                 feedback: `The parents see a crew member walk past their upset child without a glance. It feels cold, even if unintentional. Moving day is emotional.
 
 The crew that acknowledges that — even in small ways — is the crew that gets a 5-star review and a referral. The one that ignores it just gets paid.`,
                 xp: 0
+            },
+            {
+                id: "c",
+                text: "Keep walking — it's not your place to talk to their kid and you've got boxes to move",
+                grade: "B",
+                feedback: `Fair — you're there to move furniture, not play therapist. But Einstein movers aren't just laborers. The best crews read the room and find small moments to make hard days easier.
+
+You don't have to solve the family's stress. But a kind word costs nothing and changes everything.`,
+                xp: 50
             }
         ],
         correctChoice: "a",
@@ -588,6 +589,15 @@ How do you set the tone?`,
         choices: [
             {
                 id: "a",
+                text: "Get frustrated — \"Come on guys, I need you to show up today. This isn't going to work if you're dragging.\"",
+                grade: "C",
+                feedback: `You just made two people feel worse about a bad day they're already having. Guilt doesn't create energy — it creates resentment. Now you've got a crew that's tired AND annoyed at their crew lead.
+
+Elevation isn't demanding energy — it's creating it.`,
+                xp: 0
+            },
+            {
+                id: "b",
                 text: "Before you pull out, address it directly: \"I know we're not all feeling 100% today. That's fine — we're human. But this customer is counting on us, so let's bring the energy for the next 6 hours. I've got your backs if you've got mine.\" Then lead by example all day.",
                 grade: "A",
                 feedback: `You acknowledged reality without dwelling on it. You set the expectation. And then you SHOWED them what the energy should look like.
@@ -596,25 +606,16 @@ By lunch, the quiet guy is cracking jokes and the tired guy found his second win
                 xp: 100
             },
             {
-                id: "b",
+                id: "c",
                 text: "Don't say anything — everyone has bad days. Just work hard yourself and hope they match your energy.",
                 grade: "B",
                 feedback: `Leading by example is good. But silence can be read as "I don't notice" or "I don't care." Your crew is looking to you for the vibe.
 
 Without a word, they'll default to whatever mood they walked in with. Sometimes people need someone to say "we've got this" before they believe it.`,
                 xp: 50
-            },
-            {
-                id: "c",
-                text: "Get frustrated — \"Come on guys, I need you to show up today. This isn't going to work if you're dragging.\"",
-                grade: "C",
-                feedback: `You just made two people feel worse about a bad day they're already having. Guilt doesn't create energy — it creates resentment. Now you've got a crew that's tired AND annoyed at their crew lead.
-
-Elevation isn't demanding energy — it's creating it.`,
-                xp: 0
             }
         ],
-        correctChoice: "a",
+        correctChoice: "b",
         proTip: "The crew lead sets the thermostat for the whole day. Acknowledge the mood, redirect it, then lead by example. People match what they see, not what they're told."
     },
 
@@ -640,21 +641,21 @@ SUPPORT means the move isn't done until EVERYONE'S work is done. Your section be
             },
             {
                 id: "b",
-                text: "Call out \"You good over there?\" from across the garage",
-                grade: "B",
-                feedback: `Better than ignoring it. But "You good?" puts the burden on them to admit they need help. Some people won't ask — pride, not wanting to slow things down, not wanting to look weak.
-
-Real support is proactive. You see someone struggling, you don't ask. You just appear.`,
-                xp: 50
-            },
-            {
-                id: "c",
                 text: "Wait for him to ask — you don't want to insult him by assuming he needs help",
                 grade: "C",
                 feedback: `He's red-faced, wrestling with stripped bolts, clearly losing the battle. Everyone can see he needs help. But you're waiting for an invitation that pride won't let him send.
 
 By waiting, you're making him choose between struggling alone or "admitting weakness." Real support doesn't need an invitation. You see it, you jump in.`,
                 xp: 0
+            },
+            {
+                id: "c",
+                text: "Call out \"You good over there?\" from across the garage",
+                grade: "B",
+                feedback: `Better than ignoring it. But "You good?" puts the burden on them to admit they need help. Some people won't ask — pride, not wanting to slow things down, not wanting to look weak.
+
+Real support is proactive. You see someone struggling, you don't ask. You just appear.`,
+                xp: 50
             }
         ],
         correctChoice: "a",
@@ -670,12 +671,12 @@ You've already worked 9 hours today. What do you do?`,
         choices: [
             {
                 id: "a",
-                text: "\"Yeah, send us the address. We're on the way.\"",
-                grade: "A",
-                feedback: `You just showed up for a crew that was drowning. They didn't expect it. The relief on their faces when you walked in was worth more than clocking out early.
+                text: "\"Nah, we're done for the day. They'll figure it out.\"",
+                grade: "C",
+                feedback: `They'll "figure it out." Maybe. But it might mean a customer waiting an extra 2 hours, a crew working until 9 PM, and a bad experience that reflects on ALL of Einstein — not just that crew.
 
-That crew will remember this. YOUR crew will remember this. And the customer gets their move done right, on time, by an Einstein team that showed up for each other. Support doesn't stop at your crew — it extends to every Einstein truck on the road.`,
-                xp: 100
+"Not my crew, not my problem" is the support version of "not my job." We're one company, not a collection of trucks.`,
+                xp: 0
             },
             {
                 id: "b",
@@ -688,15 +689,15 @@ The best response is leading with yes, not polling for permission.`,
             },
             {
                 id: "c",
-                text: "\"Nah, we're done for the day. They'll figure it out.\"",
-                grade: "C",
-                feedback: `They'll "figure it out." Maybe. But it might mean a customer waiting an extra 2 hours, a crew working until 9 PM, and a bad experience that reflects on ALL of Einstein — not just that crew.
+                text: "\"Yeah, send us the address. We're on the way.\"",
+                grade: "A",
+                feedback: `You just showed up for a crew that was drowning. They didn't expect it. The relief on their faces when you walked in was worth more than clocking out early.
 
-"Not my crew, not my problem" is the support version of "not my job." We're one company, not a collection of trucks.`,
-                xp: 0
+That crew will remember this. YOUR crew will remember this. And the customer gets their move done right, on time, by an Einstein team that showed up for each other. Support doesn't stop at your crew — it extends to every Einstein truck on the road.`,
+                xp: 100
             }
         ],
-        correctChoice: "a",
+        correctChoice: "c",
         proTip: "Einstein is one team across every truck, every branch, every city. When one crew wins, we all win. When one crew struggles, that's our cue to show up."
     },
     {
@@ -709,21 +710,21 @@ What do you do?`,
         choices: [
             {
                 id: "a",
-                text: "Walk over, give him a genuine compliment on something he did right, then show him a quicker method: \"Good instinct protecting the shade — here, let me show you a trick that'll save you some time on the next one.\"",
-                grade: "A",
-                feedback: `You just did three things in 30 seconds: built his confidence, taught him something useful, and made him feel like part of the crew.
-
-First days are terrifying. One moment of support can turn "I don't know if I can do this" into "I've got people who have my back." That's how you build a teammate, not just a coworker.`,
-                xp: 100
-            },
-            {
-                id: "b",
                 text: "Leave him alone — everyone has to learn at their own pace",
                 grade: "B",
                 feedback: `Not wrong. But "learning at your own pace" on a moving crew means falling behind, getting stressed, and wondering if you're cut out for this.
 
 A little guidance early saves a lot of struggle later. You remember your first day. Someone probably helped you. Pay it forward.`,
                 xp: 50
+            },
+            {
+                id: "b",
+                text: "Walk over, give him a genuine compliment on something he did right, then show him a quicker method: \"Good instinct protecting the shade — here, let me show you a trick that'll save you some time on the next one.\"",
+                grade: "A",
+                feedback: `You just did three things in 30 seconds: built his confidence, taught him something useful, and made him feel like part of the crew.
+
+First days are terrifying. One moment of support can turn "I don't know if I can do this" into "I've got people who have my back." That's how you build a teammate, not just a coworker.`,
+                xp: 100
             },
             {
                 id: "c",
@@ -735,7 +736,7 @@ He didn't learn anything except that his work wasn't good enough. Tomorrow he'll
                 xp: 0
             }
         ],
-        correctChoice: "a",
+        correctChoice: "b",
         proTip: "First days shape careers. One moment of patience and encouragement on day one pays dividends for months. Build your crew up — they'll run through walls for you."
     }
 ];
