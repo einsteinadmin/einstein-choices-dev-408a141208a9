@@ -602,8 +602,15 @@ class HybridTraining {
         this.quizScore = 0;
         this.quizAttempts++;
 
-        // Shuffle and select 10 questions
-        this.quizQuestions = this.shuffleArray([...QUIZ_QUESTIONS]).slice(0, 10);
+        // Use all questions in defined order
+        this.quizQuestions = [...QUIZ_QUESTIONS];
+
+        // Update static total counts in quiz header
+        const totalQ = this.quizQuestions.length;
+        const totalScoreEl = document.getElementById('quizTotalScore');
+        const totalQEl = document.getElementById('quizTotalQ');
+        if (totalScoreEl) totalScoreEl.textContent = totalQ;
+        if (totalQEl) totalQEl.textContent = totalQ;
 
         document.getElementById('quizResults').classList.add('hidden');
         document.getElementById('quizContainer').classList.remove('hidden');
@@ -685,13 +692,15 @@ class HybridTraining {
         document.getElementById('quizResults').classList.remove('hidden');
         document.getElementById('quizProgressFill').style.width = '100%';
 
-        const passed = this.quizScore >= 8;
+        const total = this.quizQuestions.length;
+        const passThreshold = Math.ceil(total * 0.8);
+        const passed = this.quizScore >= passThreshold;
 
         document.getElementById('resultIcon').textContent = passed ? '🎉' : '📚';
         document.getElementById('resultTitle').textContent = passed ? 'Congratulations!' : 'Almost There!';
         document.getElementById('resultMessage').textContent = passed
-            ? `You scored ${this.quizScore}/10! You've demonstrated a solid understanding of the CHOICES values.`
-            : `You scored ${this.quizScore}/10. You need 8/10 to pass. Review the values and try again!`;
+            ? `You scored ${this.quizScore}/${total}! You've demonstrated a solid understanding of the CHOICES values.`
+            : `You scored ${this.quizScore}/${total}. You need ${passThreshold}/${total} to pass. Review the values and try again!`;
 
         if (passed) {
             document.getElementById('showCompletion').classList.remove('hidden');
@@ -734,7 +743,7 @@ class HybridTraining {
 
         // Set stats
         document.getElementById('finalXP').textContent = this.xp;
-        document.getElementById('finalQuizScore').textContent = `${this.quizScore}/10`;
+        document.getElementById('finalQuizScore').textContent = `${this.quizScore}/${this.quizQuestions.length}`;
 
         // Calculate scenario grade
         const aCount = this.scenarioScores.filter(s => s.grade === 'A').length;
