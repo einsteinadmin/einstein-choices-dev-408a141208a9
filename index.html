@@ -219,7 +219,7 @@
                         <h2>The CHOICES Challenge</h2>
                     </div>
                     <div class="scenario-progress">
-                        Scenario <span id="scenarioCount">1</span> of 7
+                        Scenario <span id="scenarioCount">1</span> of <span id="scenarioTotal">18</span>
                     </div>
                 </div>
 
@@ -238,6 +238,10 @@
                 <!-- Scenario Container -->
                 <div class="scenario-container" id="scenarioContainer">
                     <!-- Scenarios loaded dynamically -->
+                </div>
+
+                <div class="scenario-nav">
+                    <button class="btn btn-back btn-small" id="prevScenarioBtn" onclick="window.training.goPreviousScenario()">← Previous</button>
                 </div>
 
                 <!-- Pro Tip Modal -->
@@ -289,7 +293,10 @@
                         <p class="hint">Example: "This week, I will always jog back to the truck, not walk."</p>
                     </div>
 
-                    <button class="btn btn-primary btn-large" id="startQuiz">Take the Final Quiz</button>
+                    <div class="module-nav">
+                        <button class="btn btn-back btn-large" onclick="window.training.showModule(3)">← Back</button>
+                        <button class="btn btn-primary btn-large" id="startQuiz">Take the Final Quiz</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -303,6 +310,7 @@
                     <span class="module-badge interactive">Final Challenge</span>
                     <h2>Quick check: did it stick?</h2>
                     <p>10 questions, 8 to pass. Don't worry—you've got this.</p>
+                    <button class="btn btn-back btn-small module-back-top" onclick="window.training.showModule(4)">← Back to Self-Assessment</button>
                 </div>
 
                 <div class="quiz-progress-bar">
@@ -397,7 +405,10 @@
                         <p><strong>Bottom line:</strong> you're not just learning these values today and moving on. You're joining a team that lives them.</p>
                     </div>
 
-                    <button class="btn btn-primary btn-large" id="showResults">See Your Results</button>
+                    <div class="module-nav">
+                        <button class="btn btn-back btn-large" onclick="window.training.showModule(5)">← Back</button>
+                        <button class="btn btn-primary btn-large" id="showResults">See Your Results</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -463,6 +474,7 @@
                 </div>
 
                 <div class="completion-actions">
+                    <button class="btn btn-back" onclick="window.training.showModule(6)">← Back</button>
                     <button class="btn btn-primary" id="printCertificate">Print Certificate</button>
                     <button class="btn btn-secondary" id="restartTraining">Start Over</button>
                 </div>

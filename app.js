@@ -367,6 +367,15 @@ class HybridTraining {
     }
 
     // ===== Scenarios =====
+    goPreviousScenario() {
+        if (this.currentScenario > 0) {
+            this.loadScenario(this.currentScenario - 1);
+        } else {
+            // Go back to intro-choices video module
+            this.showModule(2);
+        }
+    }
+
     loadScenario(index) {
         if (index >= SCENARIOS.length) {
             this.completeScenarios();
@@ -377,6 +386,14 @@ class HybridTraining {
         const scenario = SCENARIOS[index];
 
         document.getElementById('scenarioCount').textContent = index + 1;
+        const totalEl = document.getElementById('scenarioTotal');
+        if (totalEl) totalEl.textContent = SCENARIOS.length;
+
+        // Update previous button label based on position
+        const prevBtn = document.getElementById('prevScenarioBtn');
+        if (prevBtn) {
+            prevBtn.textContent = index === 0 ? '← Back to Intro' : '← Previous Scenario';
+        }
 
         const container = document.getElementById('scenarioContainer');
         container.innerHTML = `

@@ -537,17 +537,28 @@ body {
     box-shadow: var(--shadow-md);
 }
 
-/* Back button */
+/* Back button — subtle, non-competitive with primary CTA */
 .btn-back {
     background: transparent;
-    color: var(--text-secondary);
-    border: 2px solid var(--border-color);
+    color: var(--einstein-gray);
+    border: 2px solid #D4D6D8;
 }
 
 .btn-back:hover {
-    background: var(--bg-light);
-    color: var(--text-primary);
+    background: var(--einstein-light);
+    color: var(--einstein-dark);
+    border-color: var(--einstein-gray);
     transform: translateY(-2px);
+}
+
+/* Universal focus state — accessibility */
+.btn:focus-visible,
+.choice-btn:focus-visible,
+.quiz-option:focus-visible,
+.reference-toggle:focus-visible,
+.assessment-rating:focus-visible {
+    outline: 3px solid var(--einstein-orange);
+    outline-offset: 2px;
 }
 
 /* Module navigation row */
@@ -557,6 +568,27 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+/* Small back button variant (for in-module top placement) */
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+}
+
+/* Top-of-module back button (for quiz/expect header area) */
+.module-back-top {
+    margin-top: 12px;
+}
+
+/* Scenario navigation */
+.scenario-nav {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid #E5E7EB;
 }
 
 /* Secondary - Orange for navigation/accent CTAs */
