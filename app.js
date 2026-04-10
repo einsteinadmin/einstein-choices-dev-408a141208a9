@@ -1,0 +1,790 @@
+// Einstein CHOICES Training - Hybrid Version
+// Combines video content with interactive scenarios
+
+// =====================================
+// VIDEO CONFIGURATION
+// Replace these IDs with your YouTube video IDs
+// =====================================
+const VIDEO_CONFIG = {
+    welcome: '8Dh10knA15k',      // Welcome/intro video
+    culture: 'QMHA3ZrXAxY',     // Why Culture Wins
+    choices: 'S_pvbypDrrI',      // Introducing CHOICES
+    congrats: 'VIDEO_ID_4'       // Optional congratulations video (leave as-is to skip)
+};
+
+// Set to true once you've added real video IDs
+const VIDEOS_READY = true;
+
+// =====================================
+// MAIN APPLICATION
+// =====================================
+class HybridTraining {
+    constructor() {
+        // State
+        this.currentModule = 0;
+        this.currentScenario = 0;
+        this.currentQuizQuestion = 0;
+        this.xp = 0;
+        this.quizScore = 0;
+        this.quizAttempts = 0;
+        this.achievements = [];
+        this.scenarioScores = [];
+        this.assessmentRatings = {};
+        this.startTime = null;
+
+        // Module mapping
+        this.modules = [
+            'module-welcome',
+            'module-culture',
+            'module-intro-choices',
+            'module-scenarios',
+            'module-assessment',
+            'module-quiz',
+            'module-expect',
+            'module-complete'
+        ];
+
+        this.totalModules = this.modules.length;
+
+        // Load saved progress
+        this.loadProgress();
+
+        // Initialize
+        this.init();
+    }
+
+    init() {
+        this.startTime = this.startTime || Date.now();
+        this.bindEvents();
+        this.initializeVideos();
+        this.updateProgress();
+        this.updateXPDisplay();
+        this.showModule(this.currentModule);
+    }
+
+    // ===== Progress Management =====
+    saveProgress() {
+        const state = {
+            currentModule: this.currentModule,
+            currentScenario: this.currentScenario,
+            currentQuizQuestion: this.currentQuizQuestion,
+            xp: this.xp,
+            quizScore: this.quizScore,
+            quizAttempts: this.quizAttempts,
+            achievements: this.achievements,
+            scenarioScores: this.scenarioScores,
+            assessmentRatings: this.assessmentRatings,
+            startTime: this.startTime
+        };
+        localStorage.setItem('einstein-hybrid-progress', JSON.stringify(state));
+    }
+
+    loadProgress() {
+        const saved = localStorage.getItem('einstein-hybrid-progress');
+        if (saved) {
+            const state = JSON.parse(saved);
+            Object.assign(this, state);
+        }
+    }
+
+    resetProgress() {
+        localStorage.removeItem('einstein-hybrid-progress');
+        location.reload();
+    }
+
+    // ===== Video Initialization =====
+    initializeVideos() {
+        if (!VIDEOS_READY) return;
+
+        // Embed YouTube videos where placeholders exist
+        Object.entries(VIDEO_CONFIG).forEach(([key, videoId]) => {
+            if (videoId && !videoId.startsWith('VIDEO_ID')) {
+                this.embedVideo(key, videoId);
+            }
+        });
+    }
+
+    embedVideo(key, videoId) {
+        const wrapperMap = {
+            welcome: 'video-welcome',
+            culture: 'video-culture',
+            choices: 'video-choices',
+            congrats: 'video-congrats'
+        };
+
+        const wrapper = document.getElementById(wrapperMap[key]);
+        if (wrapper) {
+            wrapper.innerHTML = `
+                <iframe
+                    src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            `;
+        }
+    }
+
+    // ===== Easter Egg =====
+    initEasterEgg() {
+        this.logoTapCount = 0;
+        this.logoTapTimer = null;
+        const logo = document.getElementById('einsteinLogo');
+
+        logo?.addEventListener('click', () => {
+            if (this.achievements.includes('curiousMind')) return;
+
+            this.logoTapCount++;
+
+            // Reset tap count if too slow (must tap 7 times within 4 seconds)
+            clearTimeout(this.logoTapTimer);
+            this.logoTapTimer = setTimeout(() => { this.logoTapCount = 0; }, 4000);
+
+            // Small wiggle on each tap after 3
+            if (this.logoTapCount >= 3) {
+                logo.classList.remove('wiggle');
+                void logo.offsetWidth; // force reflow to restart animation
+                logo.classList.add('wiggle');
+            }
+
+            if (this.logoTapCount >= 7) {
+                this.logoTapCount = 0;
+                this.unlockAchievement('curiousMind');
+                this.addXP(150);
+
+                // Show the easter egg message
+                document.getElementById('easterEggModal').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('closeEasterEgg')?.addEventListener('click', () => {
+            document.getElementById('easterEggModal').classList.add('hidden');
+        });
+    }
+
+    // ===== Event Bindings =====
+    bindEvents() {
+        // Easter egg
+        this.initEasterEgg();
+
+        // Video module buttons
+        document.getElementById('completeWelcome')?.addEventListener('click', () => {
+            this.showModule(1);
+        });
+
+        document.getElementById('completeCulture')?.addEventListener('click', () => {
+            this.showModule(2);
+        });
+
+        document.getElementById('startScenarios')?.addEventListener('click', () => {
+            this.showModule(3);
+            this.loadScenario(0);
+        });
+
+        // Reference panel toggle
+        document.getElementById('toggleReference')?.addEventListener('click', (e) => {
+            const btn = e.currentTarget;
+            const panel = document.getElementById('referencePanel');
+            btn.classList.toggle('open');
+            panel.classList.toggle('hidden');
+        });
+
+        // Pro tip modal
+        document.getElementById('closeProTip')?.addEventListener('click', () => {
+            this.hideProTip();
+        });
+
+        // Assessment
+        document.getElementById('startQuiz')?.addEventListener('click', () => {
+            this.showModule(5);
+            this.initQuiz();
+        });
+
+        // Quiz
+        document.getElementById('retakeQuiz')?.addEventListener('click', () => {
+            this.retakeQuiz();
+        });
+
+        document.getElementById('showCompletion')?.addEventListener('click', () => {
+            this.showModule(6);
+        });
+
+        document.getElementById('showResults')?.addEventListener('click', () => {
+            this.showModule(7);
+        });
+
+        // Completion
+        document.getElementById('printCertificate')?.addEventListener('click', () => {
+            window.print();
+        });
+
+        document.getElementById('restartTraining')?.addEventListener('click', () => {
+            this.resetProgress();
+        });
+    }
+
+    // ===== Module Navigation =====
+    // Stop all YouTube videos by resetting iframe src
+    pauseAllVideos() {
+        document.querySelectorAll('.video-wrapper iframe').forEach(iframe => {
+            const src = iframe.src;
+            iframe.src = '';
+            iframe.src = src;
+        });
+    }
+
+    showModule(index) {
+        // Pause any playing videos before switching
+        this.pauseAllVideos();
+
+        // Hide all modules
+        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden'));
+
+        // Show target module
+        const targetModule = document.getElementById(this.modules[index]);
+        if (targetModule) {
+            targetModule.classList.remove('hidden');
+        }
+
+        this.currentModule = index;
+        this.updateProgress();
+        this.saveProgress();
+
+        // Update back button visibility
+        document.querySelectorAll('.btn-back').forEach(btn => {
+            btn.style.display = index > 0 ? 'inline-flex' : 'none';
+        });
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Module-specific initialization
+        if (index === 3) {
+            // Scenarios module - load current scenario
+            this.loadScenario(this.currentScenario);
+        } else if (index === 4) {
+            this.initAssessment();
+        } else if (index === 5) {
+            // Quiz module - only init if not already in progress
+            if (this.currentQuizQuestion === 0 && this.quizScore === 0) {
+                this.initQuiz();
+            }
+        } else if (index === 7) {
+            this.showCompletion();
+        }
+    }
+
+    updateProgress() {
+        const progress = (this.currentModule / (this.totalModules - 1)) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+
+        // Putter the truck along the road
+        const truck = document.getElementById('truckIcon');
+        if (truck) {
+            const targetPos = Math.max(3, Math.min(97, progress));
+            this.animateTruck(truck, targetPos);
+        }
+    }
+
+    animateTruck(truck, targetPos) {
+        // Get current position
+        const currentPos = parseFloat(truck.style.left) || 0;
+        const distance = targetPos - currentPos;
+
+        // If barely moving or first load, just set it
+        if (Math.abs(distance) < 0.5) {
+            truck.style.left = `${targetPos}%`;
+            return;
+        }
+
+        // Start the bounce animation
+        truck.classList.add('driving');
+
+        const duration = Math.max(800, Math.abs(distance) * 30); // longer distance = longer drive
+        const startTime = performance.now();
+
+        const step = (now) => {
+            const elapsed = now - startTime;
+            const t = Math.min(elapsed / duration, 1);
+
+            // Ease out — starts fast, slows to a stop (like a truck braking)
+            const eased = 1 - Math.pow(1 - t, 3);
+            const pos = currentPos + distance * eased;
+            truck.style.left = `${pos}%`;
+
+            if (t < 1) {
+                requestAnimationFrame(step);
+            } else {
+                truck.style.left = `${targetPos}%`;
+                truck.classList.remove('driving');
+            }
+        };
+
+        requestAnimationFrame(step);
+    }
+
+    // ===== XP System =====
+    addXP(amount) {
+        this.xp += amount;
+        this.updateXPDisplay();
+        this.showXPPopup(amount);
+        this.saveProgress();
+
+        if (this.xp >= 800) {
+            this.unlockAchievement('xpMaster');
+        }
+    }
+
+    updateXPDisplay() {
+        document.getElementById('xpDisplay').textContent = `${this.xp} XP`;
+    }
+
+    showXPPopup(amount) {
+        const popup = document.getElementById('xpPopup');
+        document.getElementById('xpAmount').textContent = `+${amount} XP`;
+        popup.classList.remove('hidden');
+
+        setTimeout(() => {
+            popup.classList.add('hidden');
+        }, 1500);
+    }
+
+    // ===== Achievements =====
+    unlockAchievement(id) {
+        if (this.achievements.includes(id)) return;
+
+        this.achievements.push(id);
+        const achievement = ACHIEVEMENTS[id];
+
+        const toast = document.getElementById('achievementToast');
+        document.getElementById('toastName').textContent = `${achievement.icon} ${achievement.name}`;
+        toast.classList.remove('hidden');
+
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 4000);
+
+        this.saveProgress();
+    }
+
+    // ===== Scenarios =====
+    loadScenario(index) {
+        if (index >= SCENARIOS.length) {
+            this.completeScenarios();
+            return;
+        }
+
+        this.currentScenario = index;
+        const scenario = SCENARIOS[index];
+
+        document.getElementById('scenarioCount').textContent = index + 1;
+
+        const container = document.getElementById('scenarioContainer');
+        container.innerHTML = `
+            <div class="scenario">
+                <div class="scenario-value-badge">${scenario.value}: ${scenario.valueDescription}</div>
+                <div class="scenario-setup">${scenario.setup.replace(/\n/g, '<br>')}</div>
+                <div class="scenario-choices">
+                    ${scenario.choices.map(choice => `
+                        <button class="choice-btn" data-choice="${choice.id}">
+                            <span class="choice-letter">${choice.id.toUpperCase()}</span>
+                            ${choice.text}
+                        </button>
+                    `).join('')}
+                </div>
+                <div class="scenario-feedback-area"></div>
+            </div>
+        `;
+
+        container.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleScenarioChoice(e, scenario));
+        });
+
+        this.saveProgress();
+    }
+
+    handleScenarioChoice(e, scenario) {
+        const choiceId = e.target.closest('.choice-btn').dataset.choice;
+        const choice = scenario.choices.find(c => c.id === choiceId);
+        const isCorrect = choiceId === scenario.correctChoice;
+
+        // Disable and style buttons
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.disabled = true;
+            const btnChoiceId = btn.dataset.choice;
+            if (btnChoiceId === choiceId) {
+                btn.classList.add(isCorrect ? 'correct' : 'wrong');
+            }
+            if (btnChoiceId === scenario.correctChoice && !isCorrect) {
+                btn.classList.add('show-correct');
+            }
+        });
+
+        // Record score
+        this.scenarioScores.push({
+            scenarioId: scenario.id,
+            choiceId: choiceId,
+            grade: choice.grade,
+            xp: choice.xp
+        });
+
+        // Add XP
+        if (choice.xp > 0) {
+            this.addXP(choice.xp);
+        }
+
+        // First choice achievement
+        if (this.scenarioScores.length === 1) {
+            this.unlockAchievement('firstChoice');
+        }
+
+        // Show feedback
+        const feedbackArea = document.querySelector('.scenario-feedback-area');
+        feedbackArea.innerHTML = `
+            <div class="scenario-feedback ${isCorrect ? 'correct' : 'wrong'}">
+                <div class="feedback-header">
+                    <span class="feedback-icon">${isCorrect ? '✅' : '❌'}</span>
+                    <span class="feedback-title">${isCorrect ? 'Excellent!' : 'Not quite...'}</span>
+                </div>
+                <p class="feedback-text">${choice.feedback.replace(/\n/g, '<br>')}</p>
+                ${choice.xp > 0 ? `<p class="xp-earned">+${choice.xp} XP</p>` : ''}
+                <button class="btn btn-primary">
+                    ${this.currentScenario < SCENARIOS.length - 1 ? 'Next Scenario' : 'Continue to Self-Assessment'}
+                </button>
+            </div>
+        `;
+
+        feedbackArea.querySelector('.btn').addEventListener('click', () => {
+            if (isCorrect && scenario.proTip) {
+                this.showProTip(scenario.proTip);
+            } else {
+                this.advanceFromScenario();
+            }
+        });
+
+        this.saveProgress();
+    }
+
+    advanceFromScenario() {
+        if (this.currentScenario < SCENARIOS.length - 1) {
+            this.loadScenario(this.currentScenario + 1);
+        } else {
+            this.completeScenarios();
+        }
+    }
+
+    showProTip(tip) {
+        document.getElementById('proTipText').textContent = tip;
+        document.getElementById('proTipModal').classList.remove('hidden');
+    }
+
+    hideProTip() {
+        document.getElementById('proTipModal').classList.add('hidden');
+        this.advanceFromScenario();
+    }
+
+    completeScenarios() {
+        // Check for perfect run
+        const allA = this.scenarioScores.every(s => s.grade === 'A');
+        if (allA) {
+            this.unlockAchievement('perfectRun');
+        }
+
+        this.showModule(4);
+    }
+
+    // ===== Assessment =====
+    initAssessment() {
+        const grid = document.getElementById('assessmentGrid');
+
+        // Only initialize if empty
+        if (grid.children.length === 0) {
+            grid.innerHTML = CHOICES_VALUES.map(v => `
+                <div class="assessment-item" data-value="${v.letter}">
+                    <span class="assessment-value-name">${v.value}</span>
+                    <div class="rating-buttons">
+                        <button class="rating-btn" data-rating="strength">Natural Strength</button>
+                        <button class="rating-btn" data-rating="working">Working On It</button>
+                        <button class="rating-btn" data-rating="growth">Growth Edge</button>
+                    </div>
+                </div>
+            `).join('');
+
+            grid.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => this.handleRating(e));
+            });
+        }
+
+        // Apply saved ratings
+        Object.entries(this.assessmentRatings).forEach(([value, rating]) => {
+            const item = grid.querySelector(`[data-value="${value}"]`);
+            if (item) {
+                const btn = item.querySelector(`[data-rating="${rating}"]`);
+                if (btn) {
+                    item.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected', 'strength', 'working', 'growth'));
+                    btn.classList.add('selected', rating);
+                }
+            }
+        });
+
+        this.checkAssessmentCompletion();
+    }
+
+    handleRating(e) {
+        const btn = e.target;
+        const rating = btn.dataset.rating;
+        const item = btn.closest('.assessment-item');
+        const value = item.dataset.value;
+
+        // Clear previous selection in this row
+        item.querySelectorAll('.rating-btn').forEach(b => {
+            b.classList.remove('selected', 'strength', 'working', 'growth');
+        });
+
+        // Set new selection
+        btn.classList.add('selected', rating);
+
+        // Save rating
+        this.assessmentRatings[value] = rating;
+        this.saveProgress();
+
+        this.checkAssessmentCompletion();
+    }
+
+    checkAssessmentCompletion() {
+        const totalValues = CHOICES_VALUES.length;
+        const ratedCount = Object.keys(this.assessmentRatings).length;
+
+        if (ratedCount === totalValues) {
+            this.showAssessmentSummary();
+        }
+    }
+
+    showAssessmentSummary() {
+        const strengths = Object.entries(this.assessmentRatings).filter(([, r]) => r === 'strength');
+        const growthEdges = Object.entries(this.assessmentRatings).filter(([, r]) => r === 'growth');
+
+        const superpowerValue = strengths.length > 0
+            ? CHOICES_VALUES.find(v => v.letter === strengths[0][0])?.value || 'Multiple!'
+            : 'Keep exploring!';
+
+        const growthValue = growthEdges.length > 0
+            ? CHOICES_VALUES.find(v => v.letter === growthEdges[0][0])?.value || 'Multiple!'
+            : 'All-around strong!';
+
+        document.getElementById('superpowerValue').textContent = superpowerValue;
+        document.getElementById('growthValue').textContent = growthValue;
+
+        document.getElementById('assessmentSummary').classList.remove('hidden');
+
+        this.unlockAchievement('selfAware');
+    }
+
+    // ===== Quiz =====
+    initQuiz() {
+        this.currentQuizQuestion = 0;
+        this.quizScore = 0;
+        this.quizAttempts++;
+
+        // Shuffle and select 10 questions
+        this.quizQuestions = this.shuffleArray([...QUIZ_QUESTIONS]).slice(0, 10);
+
+        document.getElementById('quizResults').classList.add('hidden');
+        document.getElementById('quizContainer').classList.remove('hidden');
+
+        this.loadQuizQuestion();
+    }
+
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    loadQuizQuestion() {
+        if (this.currentQuizQuestion >= this.quizQuestions.length) {
+            this.showQuizResults();
+            return;
+        }
+
+        const question = this.quizQuestions[this.currentQuizQuestion];
+
+        document.getElementById('quizQuestionNum').textContent = this.currentQuizQuestion + 1;
+        document.getElementById('quizScore').textContent = this.quizScore;
+        document.getElementById('quizProgressFill').style.width = `${((this.currentQuizQuestion) / 10) * 100}%`;
+
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = `
+            <div class="quiz-question">
+                <p class="quiz-question-text">${question.question}</p>
+                <div class="quiz-options">
+                    ${question.options.map((opt, i) => `
+                        <button class="quiz-option" data-index="${i}">${opt}</button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        container.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.addEventListener('click', (e) => this.handleQuizAnswer(e, question));
+        });
+    }
+
+    handleQuizAnswer(e, question) {
+        const selectedIndex = parseInt(e.target.dataset.index);
+        const isCorrect = selectedIndex === question.correct;
+
+        document.querySelectorAll('.quiz-option').forEach((btn, i) => {
+            btn.disabled = true;
+            if (i === selectedIndex) {
+                btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            }
+            if (i === question.correct) {
+                btn.classList.add('correct');
+            }
+        });
+
+        if (isCorrect) {
+            this.quizScore++;
+            document.getElementById('quizScore').textContent = this.quizScore;
+        }
+
+        // Add a "Next" button instead of auto-advancing
+        const quizQuestion = document.querySelector('.quiz-question');
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'btn btn-primary';
+        nextBtn.style.marginTop = '16px';
+        nextBtn.textContent = this.currentQuizQuestion < this.quizQuestions.length - 1 ? 'Next Question' : 'See Results';
+        nextBtn.addEventListener('click', () => {
+            this.currentQuizQuestion++;
+            this.loadQuizQuestion();
+        });
+        quizQuestion.appendChild(nextBtn);
+    }
+
+    showQuizResults() {
+        document.getElementById('quizContainer').classList.add('hidden');
+        document.getElementById('quizResults').classList.remove('hidden');
+        document.getElementById('quizProgressFill').style.width = '100%';
+
+        const passed = this.quizScore >= 8;
+
+        document.getElementById('resultIcon').textContent = passed ? '🎉' : '📚';
+        document.getElementById('resultTitle').textContent = passed ? 'Congratulations!' : 'Almost There!';
+        document.getElementById('resultMessage').textContent = passed
+            ? `You scored ${this.quizScore}/10! You've demonstrated a solid understanding of the CHOICES values.`
+            : `You scored ${this.quizScore}/10. You need 8/10 to pass. Review the values and try again!`;
+
+        if (passed) {
+            document.getElementById('showCompletion').classList.remove('hidden');
+            document.getElementById('retakeQuiz').classList.add('hidden');
+
+            if (this.quizAttempts === 1) {
+                this.unlockAchievement('cultureChampion');
+            }
+
+            const elapsed = (Date.now() - this.startTime) / 1000 / 60;
+            if (elapsed < 20) {
+                this.unlockAchievement('speedDemon');
+            }
+        } else {
+            document.getElementById('retakeQuiz').classList.remove('hidden');
+            document.getElementById('showCompletion').classList.add('hidden');
+        }
+
+        this.saveProgress();
+    }
+
+    retakeQuiz() {
+        this.initQuiz();
+    }
+
+    // ===== Completion =====
+    showCompletion() {
+        // Show optional congrats video if configured
+        if (VIDEOS_READY && VIDEO_CONFIG.congrats && !VIDEO_CONFIG.congrats.startsWith('VIDEO_ID')) {
+            document.getElementById('congratsVideo').classList.remove('hidden');
+        }
+
+        // Set date
+        const now = new Date();
+        document.getElementById('completionDate').textContent = now.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Set stats
+        document.getElementById('finalXP').textContent = this.xp;
+        document.getElementById('finalQuizScore').textContent = `${this.quizScore}/10`;
+
+        // Calculate scenario grade
+        const aCount = this.scenarioScores.filter(s => s.grade === 'A').length;
+        const total = this.scenarioScores.length;
+        const percentage = Math.round((aCount / total) * 100);
+        document.getElementById('scenarioGrade').textContent = `${aCount}/${total} A's`;
+
+        // Show achievements
+        const grid = document.getElementById('achievementsGrid');
+        grid.innerHTML = Object.values(ACHIEVEMENTS).map(a => {
+            const earned = this.achievements.includes(a.id);
+            return `
+                <div class="achievement-badge ${earned ? '' : 'locked'}">
+                    <span>${a.icon}</span>
+                    <span>${a.name}</span>
+                </div>
+            `;
+        }).join('');
+
+        // Create confetti
+        this.createConfetti();
+    }
+
+    createConfetti() {
+        const container = document.getElementById('confetti');
+        const colors = ['#EF8B22', '#0979C3', '#69995d', '#FFC107', '#CC0100'];
+
+        for (let i = 0; i < 80; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 10 + 5}px;
+                height: ${Math.random() * 10 + 5}px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                left: ${Math.random() * 100}%;
+                top: -20px;
+                opacity: ${Math.random() * 0.8 + 0.2};
+                animation: confettiFall ${Math.random() * 3 + 2}s linear forwards;
+                animation-delay: ${Math.random() * 2}s;
+                border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+            `;
+            container.appendChild(confetti);
+        }
+
+        // Add keyframes if not exists
+        if (!document.getElementById('confetti-styles')) {
+            const style = document.createElement('style');
+            style.id = 'confetti-styles';
+            style.textContent = `
+                @keyframes confettiFall {
+                    0% { transform: translateY(0) rotate(0deg); }
+                    100% { transform: translateY(100vh) rotate(720deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Check for reset flag in URL (add ?reset to URL to clear progress)
+    if (window.location.search.includes('reset')) {
+        localStorage.removeItem('einstein-hybrid-progress');
+        window.location.href = window.location.pathname; // Reload without query
+        return;
+    }
+    window.hybridApp = new HybridTraining();
+    window.training = window.hybridApp;
+});

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Einstein Moving Company - CHOICES Training</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://einsteinmoving.com/wp-content/uploads/2021/09/cropped-emc-favicon-270x270.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <img src="https://www.einsteinmoving.com/wp-content/uploads/2022/02/Einstein-Logo.svg" alt="Einstein Moving Co." class="header-logo" id="einsteinLogo">
+            <span class="header-title">CHOICES Training</span>
+            <div class="xp-display" id="xpDisplay">0 XP</div>
+        </div>
+        <div class="truck-progress-container">
+            <div class="truck-road">
+                <div class="truck-road-fill" id="progressBar"></div>
+            </div>
+            <img src="assets/images/einstein-truck.png" alt="" class="truck-icon" id="truckIcon">
+        </div>
+    </header>
+
+    <!-- Trust Bar — employee-facing proof points -->
+    <div class="trust-bar">
+        <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+            </svg>
+            <span>10 Locations</span>
+        </div>
+        <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span>400+ Teammates</span>
+        </div>
+        <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+            </svg>
+            <span>55+ Awards</span>
+        </div>
+        <div class="trust-item">
+            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+            <span>Since 2012</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- ==================== -->
+        <!-- MODULE 1: WELCOME VIDEO -->
+        <!-- ==================== -->
+        <section class="module" id="module-welcome" data-module="0">
+            <div class="module-content">
+                <div class="video-module">
+                    <div class="video-header">
+                        <span class="module-badge">Welcome</span>
+                        <h1>Let's get you ready for your genius career.</h1>
+                        <p class="video-subtitle">You made it. Now let's make sure you're ready to crush it.</p>
+                    </div>
+
+                    <div class="video-container">
+                        <!-- Replace VIDEO_ID_1 with your YouTube video ID -->
+                        <div class="video-wrapper" id="video-welcome">
+                            <div class="video-placeholder" data-video-id="VIDEO_ID_1">
+                                <div class="placeholder-content">
+                                    <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                    <p>Welcome Video</p>
+                                    <p class="placeholder-note">Video loading — check your connection if this persists</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-info">
+                        <h3>What you'll learn:</h3>
+                        <ul>
+                            <li>What this training is about and why it matters</li>
+                            <li>What makes Einstein different from other moving companies</li>
+                            <li>What to expect in the next 20-25 minutes</li>
+                        </ul>
+                        <p class="xp-explainer">Earn XP for smart choices along the way — see how you stack up at the end.</p>
+                    </div>
+
+                    <div class="module-nav">
+                        <button class="btn btn-primary btn-large" id="completeWelcome">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- MODULE 2: WHY CULTURE WINS VIDEO -->
+        <!-- ==================== -->
+        <section class="module hidden" id="module-culture" data-module="1">
+            <div class="module-content">
+                <div class="video-module">
+                    <div class="video-header">
+                        <span class="module-badge">Part 1</span>
+                        <h1>Why Culture Wins</h1>
+                        <p class="video-subtitle">What a small Texas town can teach us about building champions.</p>
+                    </div>
+
+                    <div class="video-container">
+                        <div class="video-wrapper" id="video-culture">
+                            <div class="video-placeholder" data-video-id="VIDEO_ID_2">
+                                <div class="placeholder-content">
+                                    <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                    <p>Why Culture Wins</p>
+                                    <p class="placeholder-note">Video loading — check your connection if this persists</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-info">
+                        <h3>In this video:</h3>
+                        <ul>
+                            <li>The Luling, Texas story - how culture creates champions</li>
+                            <li>Einstein's track record: 8x Best of Austin, 3x Best of Texas</li>
+                            <li>Why culture is the only thing competitors can't copy</li>
+                        </ul>
+                    </div>
+
+                    <div class="awards-preview">
+                        <img src="assets/images/best-of-austin-2023.png" alt="Best of Austin">
+                        <img src="assets/images/best-of-texas.png" alt="Best of Texas">
+                        <img src="assets/images/houston-best-2023.png" alt="Houston Best">
+                    </div>
+
+                    <div class="module-nav">
+                        <button class="btn btn-back btn-large" onclick="window.training.showModule(0)">← Back</button>
+                        <button class="btn btn-primary btn-large" id="completeCulture">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- MODULE 3: INTRODUCING CHOICES VIDEO -->
+        <!-- ==================== -->
+        <section class="module hidden" id="module-intro-choices" data-module="2">
+            <div class="module-content">
+                <div class="video-module">
+                    <div class="video-header">
+                        <span class="module-badge">Part 2</span>
+                        <h1>The CHOICES Framework</h1>
+                        <p class="video-subtitle">7 values. One acronym. Zero corporate BS.</p>
+                    </div>
+
+                    <div class="video-container">
+                        <div class="video-wrapper" id="video-choices">
+                            <div class="video-placeholder" data-video-id="VIDEO_ID_3">
+                                <div class="placeholder-content">
+                                    <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                    <p>The CHOICES Framework</p>
+                                    <p class="placeholder-note">Video loading — check your connection if this persists</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="choices-preview">
+                        <img src="assets/images/choices-icons.png" alt="CHOICES Values" class="choices-image">
+                    </div>
+
+                    <div class="video-info">
+                        <h3>The 7 Values:</h3>
+                        <div class="values-grid">
+                            <div class="value-chip"><strong>C</strong>ommunicate clearly, professionally, and with kindness</div>
+                            <div class="value-chip"><strong>H</strong>ustle but don't rush</div>
+                            <div class="value-chip"><strong>O</strong>wnership over results</div>
+                            <div class="value-chip"><strong>I</strong>mprove every day with enthusiasm</div>
+                            <div class="value-chip"><strong>C</strong>onscientious attention to detail</div>
+                            <div class="value-chip"><strong>E</strong>levate attitudes and have fun</div>
+                            <div class="value-chip"><strong>S</strong>upport one another generously</div>
+                        </div>
+                    </div>
+
+                    <div class="transition-message">
+                        <p>Now that you know the values, let's see how they play out in real situations.</p>
+                        <p class="highlight">Time to put yourself in the driver's seat. (Figuratively. The truck comes later.)</p>
+                    </div>
+
+                    <div class="module-nav">
+                        <button class="btn btn-back btn-large" onclick="window.training.showModule(1)">← Back</button>
+                        <button class="btn btn-primary btn-large" id="startScenarios">Let's Do This</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- MODULE 4: INTERACTIVE SCENARIOS -->
+        <!-- ==================== -->
+        <section class="module hidden" id="module-scenarios" data-module="3">
+            <div class="module-content">
+                <div class="scenario-header">
+                    <div class="scenario-header-left">
+                        <span class="module-badge interactive">Interactive</span>
+                        <h2>The CHOICES Challenge</h2>
+                    </div>
+                    <div class="scenario-progress">
+                        Scenario <span id="scenarioCount">1</span> of 7
+                    </div>
+                </div>
+
+                <div class="choices-reference-bar">
+                    <button class="reference-toggle" id="toggleReference">
+                        <span>Show CHOICES Reference</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="reference-panel hidden" id="referencePanel">
+                        <img src="assets/images/choices-icons.png" alt="CHOICES Values">
+                    </div>
+                </div>
+
+                <!-- Scenario Container -->
+                <div class="scenario-container" id="scenarioContainer">
+                    <!-- Scenarios loaded dynamically -->
+                </div>
+
+                <!-- Pro Tip Modal -->
+                <div class="pro-tip-modal hidden" id="proTipModal">
+                    <div class="pro-tip-content">
+                        <div class="pro-tip-header">
+                            <span class="unlock-icon">🔓</span>
+                            <h3>Pro Tip Unlocked!</h3>
+                        </div>
+                        <p id="proTipText"></p>
+                        <button class="btn btn-primary" id="closeProTip">Got It!</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- MODULE 5: SELF-ASSESSMENT -->
+        <!-- ==================== -->
+        <section class="module hidden" id="module-assessment" data-module="4">
+            <div class="module-content">
+                <div class="assessment-header">
+                    <span class="module-badge interactive">Interactive</span>
+                    <h2>Your CHOICES Self-Assessment</h2>
+                    <p>No wrong answers here. Just be real — this is for you, not a grade.</p>
+                </div>
+
+                <div class="assessment-grid" id="assessmentGrid">
+                    <!-- Assessment items generated by JS -->
+                </div>
+
+                <div class="assessment-summary hidden" id="assessmentSummary">
+                    <div class="summary-cards">
+                        <div class="summary-card superpower">
+                            <span class="card-icon">💪</span>
+                            <h3>Your Superpower</h3>
+                            <p id="superpowerValue">-</p>
+                        </div>
+                        <div class="summary-card growth">
+                            <span class="card-icon">🌱</span>
+                            <h3>The Value I Need to Work On</h3>
+                            <p id="growthValue">-</p>
+                        </div>
+                    </div>
+
+                    <div class="commitment-section">
+                        <label for="commitmentText">Write one specific commitment for your first week:</label>
+                        <textarea id="commitmentText" placeholder="This week, I will..."></textarea>
+                        <p class="hint">Example: "This week, I will always jog back to the truck, not walk."</p>
+                    </div>
+
+                    <button class="btn btn-primary btn-large" id="startQuiz">Take the Final Quiz</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- MODULE 6: FINAL QUIZ -->
+        <!-- ==================== -->
+        <section class="module hidden" id="module-quiz" data-module="5">
+            <div class="module-content">
+                <div class="quiz-header">
+                    <span class="module-badge interactive">Final Challenge</span>
+                    <h2>Quick check: did it stick?</h2>
+                    <p>10 questions, 8 to pass. Don't worry—you've got this.</p>
+                </div>
+
+                <div class="quiz-progress-bar">
+                    <div class="quiz-stats">
+                        <span>Score: <strong id="quizScore">0</strong>/10</span>
+                        <span>Question <strong id="quizQuestionNum">1</strong>/10</span>
+                    </div>
+                    <div class="quiz-progress-track">
+                        <div class="quiz-progress-fill" id="quizProgressFill"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-container" id="quizContainer">
+                    <!-- Quiz questions loaded dynamically -->
+                </div>
+
+                <div class="quiz-results hidden" id="quizResults">
+                    <div class="result-icon" id="resultIcon"></div>
+                    <h3 id="resultTitle"></h3>
+                    <p id="resultMessage"></p>
+                    <div class="result-actions">
+                        <button class="btn btn-secondary hidden" id="retakeQuiz">Try Again</button>
+                        <button class="btn btn-primary hidden" id="showCompletion">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- MODULE 7: WHAT TO EXPECT -->
+        <!-- ==================== -->
+        <section class="module hidden" id="module-expect" data-module="6">
+            <div class="module-content">
+                <div class="expect-module">
+                    <div class="expect-header">
+                        <span class="module-badge">Good to Know</span>
+                        <h1>What to Expect</h1>
+                        <p class="expect-subtitle">So now you know the values. Here's how you'll actually see them show up.</p>
+                    </div>
+
+                    <div class="expect-cards">
+                        <div class="expect-card">
+                            <div class="expect-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
+                            </div>
+                            <div class="expect-card-content">
+                                <h3>You'll hear CHOICES constantly.</h3>
+                                <p>In team meetings, in shout-outs, on the walls. It's the language we use here. When someone does something great, we name the value. You'll pick it up fast.</p>
+                            </div>
+                        </div>
+
+                        <div class="expect-card">
+                            <div class="expect-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                            </div>
+                            <div class="expect-card-content">
+                                <h3>Expect feedback tied to values.</h3>
+                                <p>Good or constructive, your manager will connect feedback to a specific value. "That's A-Player Ownership" or "Let's talk about what Hustle looks like in that situation." It's how coaching works here.</p>
+                            </div>
+                        </div>
+
+                        <div class="expect-card">
+                            <div class="expect-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                            <div class="expect-card-content">
+                                <h3>Everyone leads by example. Including you.</h3>
+                                <p>You don't need a title to set the tone. If you see something that needs doing, handle it. If a teammate's struggling, jump in. First week or fifth year — same expectation.</p>
+                            </div>
+                        </div>
+
+                        <div class="expect-card">
+                            <div class="expect-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="expect-card-content">
+                                <h3>We check in. For real.</h3>
+                                <p>Surveys, reviews, honest conversations. We pay attention to how the culture is doing and make tough calls when someone isn't living up to it. This training isn't a one-and-done — it's day one of how we operate.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expect-bottom-line">
+                        <p><strong>Bottom line:</strong> you're not just learning these values today and moving on. You're joining a team that lives them.</p>
+                    </div>
+
+                    <button class="btn btn-primary btn-large" id="showResults">See Your Results</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== -->
+        <!-- MODULE 8: COMPLETION -->
+        <!-- ==================== -->
+        <section class="module hidden" id="module-complete" data-module="7">
+            <div class="module-content completion-content">
+                <div class="confetti-container" id="confetti"></div>
+
+                <!-- Optional: Congratulations Video -->
+                <div class="congrats-video hidden" id="congratsVideo">
+                    <div class="video-wrapper" id="video-congrats">
+                        <div class="video-placeholder" data-video-id="VIDEO_ID_4">
+                            <div class="placeholder-content">
+                                <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Congratulations Message (Optional)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="completion-header">
+                    <div class="completion-icon">🎉</div>
+                    <h1>Heck yeah! You're officially trained.</h1>
+                    <p class="completion-subtitle">You now know the 7 values that make Einstein movers the best in every market we're in.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="finalXP">0</span>
+                        <span class="stat-label">Total XP</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="finalQuizScore">0/10</span>
+                        <span class="stat-label">Quiz Score</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="scenarioGrade">-</span>
+                        <span class="stat-label">Scenario Performance</span>
+                    </div>
+                </div>
+
+                <!-- Certificate -->
+                <div class="certificate" id="certificate">
+                    <div class="certificate-inner">
+                        <img src="https://www.einsteinmoving.com/wp-content/uploads/2022/02/Einstein-Logo.svg" alt="Einstein" class="cert-logo">
+                        <h2>Certificate of Completion</h2>
+                        <p class="cert-subtitle">CHOICES Training Program</p>
+                        <div class="cert-name-section">
+                            <p>This certifies that</p>
+                            <input type="text" id="certName" placeholder="Your Name" class="cert-name-input">
+                            <p>has successfully completed the Einstein Moving Company CHOICES Training</p>
+                        </div>
+                        <p class="cert-date">Completed on <span id="completionDate"></span></p>
+                        <div class="cert-values">
+                            <strong>C</strong>ommunicate · <strong>H</strong>ustle · <strong>O</strong>wnership · <strong>I</strong>mprove · <strong>C</strong>onscientious · <strong>E</strong>levate · <strong>S</strong>upport
+                        </div>
+                    </div>
+                </div>
+
+                <div class="completion-actions">
+                    <button class="btn btn-primary" id="printCertificate">Print Certificate</button>
+                    <button class="btn btn-secondary" id="restartTraining">Start Over</button>
+                </div>
+
+                <div class="next-steps">
+                    <h3>What's next?</h3>
+                    <p>Talk to your manager about your People Analyzer worksheet and discuss:</p>
+                    <ul>
+                        <li>Which value is your <strong>superpower</strong>?</li>
+                        <li>Which value do you <strong>need to work on</strong>?</li>
+                        <li>What's one specific thing you'll do differently this week?</li>
+                    </ul>
+                    <p class="welcome-message">Welcome to Einstein. Let's get to work. 🧠</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Achievement Toast -->
+    <div class="achievement-toast hidden" id="achievementToast">
+        <div class="toast-icon">🏆</div>
+        <div class="toast-content">
+            <p class="toast-title">Achievement Unlocked!</p>
+            <p class="toast-name" id="toastName"></p>
+        </div>
+    </div>
+
+    <!-- XP Popup -->
+    <div class="xp-popup hidden" id="xpPopup">
+        <span id="xpAmount">+100 XP</span>
+    </div>
+
+    <!-- Easter Egg Message -->
+    <div class="easter-egg-modal hidden" id="easterEggModal">
+        <div class="easter-egg-content">
+            <div class="easter-egg-icon">🧠</div>
+            <h3>You found it.</h3>
+            <p>Clearly you pay attention to details. That's a CHOICES value, by the way.</p>
+            <p class="easter-egg-sign-off">— Cameron</p>
+            <button class="btn btn-primary" id="closeEasterEgg">Nice.</button>
+        </div>
+    </div>
+
+    <script src="data/scenarios.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
