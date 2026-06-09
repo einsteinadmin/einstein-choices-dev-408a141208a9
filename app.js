@@ -60,62 +60,6 @@ class HybridTraining {
         this.updateProgress();
         this.updateXPDisplay();
         this.showModule(this.currentModule);
-        this.initDevNav(); // PROTOTYPE ONLY — remove for production
-    }
-
-    // ===== DEV NAV — PROTOTYPE ONLY =====
-    // Remove this entire method (and the call in init) for production
-    initDevNav() {
-        const toggle = document.getElementById('devNavToggle');
-        const panel = document.getElementById('devNavPanel');
-        if (!toggle || !panel) return;
-
-        // Toggle panel visibility
-        toggle.addEventListener('click', () => {
-            panel.classList.toggle('hidden');
-            this.updateDevNavActive();
-        });
-
-        // Module jump buttons
-        document.querySelectorAll('.dev-nav-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const moduleIndex = parseInt(btn.dataset.jump);
-                this.showModule(moduleIndex);
-                if (moduleIndex === 3) {
-                    this.loadScenario(0);
-                }
-                this.updateDevNavActive();
-            });
-        });
-
-        // Populate scenario dropdown
-        const select = document.getElementById('devScenarioJump');
-        if (select && typeof SCENARIOS !== 'undefined') {
-            SCENARIOS.forEach((s, i) => {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = `${i + 1}. ${s.value} — ${s.setup.substring(0, 40).replace(/\n/g, ' ')}...`;
-                select.appendChild(opt);
-            });
-            select.addEventListener('change', (e) => {
-                const idx = parseInt(e.target.value);
-                if (!isNaN(idx)) {
-                    this.showModule(3);
-                    this.loadScenario(idx);
-                    select.value = '';
-                }
-            });
-        }
-
-        // Update active state when module changes
-        this.updateDevNavActive();
-    }
-
-    updateDevNavActive() {
-        document.querySelectorAll('.dev-nav-btn').forEach(btn => {
-            const moduleIndex = parseInt(btn.dataset.jump);
-            btn.classList.toggle('active', moduleIndex === this.currentModule);
-        });
     }
 
     // ===== Progress Management =====
@@ -317,9 +261,6 @@ class HybridTraining {
         document.querySelectorAll('.btn-back').forEach(btn => {
             btn.style.display = index > 0 ? 'inline-flex' : 'none';
         });
-
-        // Update dev nav active state (prototype only)
-        if (this.updateDevNavActive) this.updateDevNavActive();
 
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });

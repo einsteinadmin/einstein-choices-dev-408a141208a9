@@ -423,20 +423,6 @@
             <div class="module-content completion-content">
                 <div class="confetti-container" id="confetti"></div>
 
-                <!-- Optional: Congratulations Video -->
-                <div class="congrats-video hidden" id="congratsVideo">
-                    <div class="video-wrapper" id="video-congrats">
-                        <div class="video-placeholder" data-video-id="VIDEO_ID_4">
-                            <div class="placeholder-content">
-                                <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M8 5v14l11-7z"/>
-                                </svg>
-                                <p>Congratulations Message (Optional)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="completion-header">
                     <div class="completion-icon">🎉</div>
                     <h1>Heck yeah! You're officially trained.</h1>
@@ -497,40 +483,6 @@
         </section>
 
     </main>
-
-    <!-- ============================================================== -->
-    <!-- DEV NAV — PROTOTYPE ONLY. Delete this entire block before prod. -->
-    <!-- Also remove .dev-nav styles from styles.css and the init call  -->
-    <!-- in app.js to remove completely.                                 -->
-    <!-- ============================================================== -->
-    <div class="dev-nav" id="devNav">
-        <button class="dev-nav-toggle" id="devNavToggle" aria-label="Toggle dev navigation" title="Jump to section">
-            <span class="dev-nav-label">DEV</span>
-            <span class="dev-nav-icon" aria-hidden="true">⚡</span>
-        </button>
-        <div class="dev-nav-panel hidden" id="devNavPanel">
-            <div class="dev-nav-header">
-                <strong>Jump to section</strong>
-                <span class="dev-nav-note">Prototype only</span>
-            </div>
-            <div class="dev-nav-buttons">
-                <button class="dev-nav-btn" data-jump="0">1. Welcome Video</button>
-                <button class="dev-nav-btn" data-jump="1">2. Why Culture Wins</button>
-                <button class="dev-nav-btn" data-jump="2">3. CHOICES Framework</button>
-                <button class="dev-nav-btn" data-jump="3">4. Scenarios (18)</button>
-                <button class="dev-nav-btn" data-jump="4">5. Self-Assessment</button>
-                <button class="dev-nav-btn" data-jump="5">6. Final Quiz</button>
-                <button class="dev-nav-btn" data-jump="6">7. What to Expect</button>
-                <button class="dev-nav-btn" data-jump="7">8. Completion</button>
-            </div>
-            <div class="dev-nav-scenarios">
-                <label for="devScenarioJump" class="dev-nav-sub">Jump to scenario:</label>
-                <select id="devScenarioJump" class="dev-nav-select">
-                    <option value="">— Select —</option>
-                </select>
-            </div>
-        </div>
-    </div>
 
     <!-- Achievement Toast -->
     <div class="achievement-toast hidden" id="achievementToast">
