@@ -37,7 +37,6 @@ class HybridTraining {
         this.assessmentRatings = {};
         this.commitmentText = '';
         this.watchedVideos = {};
-        this.waterBreakShown = false;
         this.startTime = null;
         this.ytPlayers = {};
 
@@ -85,7 +84,6 @@ class HybridTraining {
             assessmentRatings: this.assessmentRatings,
             commitmentText: this.commitmentText,
             watchedVideos: this.watchedVideos,
-            waterBreakShown: this.waterBreakShown,
             startTime: this.startTime
         };
         localStorage.setItem('einstein-hybrid-progress', JSON.stringify(state));
@@ -279,75 +277,42 @@ class HybridTraining {
         }
     }
 
-    // Two-blast truck horn: a pair of sawtooth tones through a lowpass filter
+    // Friendly pickup-truck double-toot: warm two-note horn chord (major
+    // third), quick "beep-beep" rhythm — cheerful, not aggressive
     honkSound() {
         const ctx = this.getAudioCtx();
         if (!ctx) return;
         const now = ctx.currentTime;
-        [0, 0.24].forEach(offset => {
+        [[0, 0.12], [0.22, 0.18]].forEach(([offset, length]) => {
             const t = now + offset;
             const gain = ctx.createGain();
             const filter = ctx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.value = 900;
+            filter.frequency.value = 1600;
             filter.connect(gain);
             gain.connect(ctx.destination);
 
-            [233, 311].forEach(freq => {
+            [349, 440].forEach(freq => {
                 const osc = ctx.createOscillator();
-                osc.type = 'sawtooth';
+                osc.type = 'triangle';
                 osc.frequency.value = freq;
+                const osc2 = ctx.createOscillator();
+                osc2.type = 'square';
+                osc2.frequency.value = freq;
+                const squareGain = ctx.createGain();
+                squareGain.gain.value = 0.25; // a touch of brass on top
                 osc.connect(filter);
-                osc.start(t);
-                osc.stop(t + 0.2);
+                osc2.connect(squareGain);
+                squareGain.connect(filter);
+                osc.start(t); osc.stop(t + length + 0.05);
+                osc2.start(t); osc2.stop(t + length + 0.05);
             });
 
             gain.gain.setValueAtTime(0.0001, t);
-            gain.gain.exponentialRampToValueAtTime(0.16, t + 0.02);
-            gain.gain.setValueAtTime(0.16, t + 0.13);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.19);
+            gain.gain.exponentialRampToValueAtTime(0.14, t + 0.015);
+            gain.gain.setValueAtTime(0.14, t + length - 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + length + 0.04);
         });
-    }
-
-    // Reverse-warning beeper: three short high sine beeps
-    backupBeeps() {
-        const ctx = this.getAudioCtx();
-        if (!ctx) return;
-        const now = ctx.currentTime;
-        [0, 0.6, 1.2].forEach(offset => {
-            const t = now + offset;
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = 980;
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            gain.gain.setValueAtTime(0.0001, t);
-            gain.gain.exponentialRampToValueAtTime(0.08, t + 0.015);
-            gain.gain.setValueAtTime(0.08, t + 0.14);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.19);
-            osc.start(t);
-            osc.stop(t + 0.2);
-        });
-    }
-
-    // The finish-line flourish: the truck backs up to the dock on completion
-    truckReversePark() {
-        const truck = document.getElementById('truckIcon');
-        if (!truck || truck.classList.contains('reversing')) return;
-        truck.classList.add('reversing');
-
-        const container = document.querySelector('.truck-progress-container');
-        const bubble = document.createElement('div');
-        bubble.className = 'honk-bubble';
-        bubble.textContent = 'Beep... beep... beep...';
-        bubble.style.left = truck.style.left || '97%';
-        container?.appendChild(bubble);
-
-        this.backupBeeps();
-
-        setTimeout(() => bubble.remove(), 2400);
-        setTimeout(() => truck.classList.remove('reversing'), 2600);
     }
 
     // ===== Event Bindings =====
@@ -605,16 +570,10 @@ class HybridTraining {
 
     // ===== XP System =====
     addXP(amount) {
-        const before = this.xp;
         this.xp += amount;
         this.updateXPDisplay();
         this.showXPPopup(amount);
         this.saveProgress();
-
-        // Milestone quip at 500
-        if (before < 500 && this.xp >= 500) {
-            this.showToast('500 XP', "You could probably wrap a couch blindfolded by now. (Don't.)", '📦');
-        }
 
         if (this.xp >= 800) {
             this.unlockAchievement('xpMaster');
@@ -712,14 +671,6 @@ class HybridTraining {
         // New scenario should start at the top — otherwise the reader lands
         // mid-page on the answer buttons of a question they haven't read
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // One-time water break at the halfway mark — we mean it on the job,
-        // so we mean it here
-        const halfway = Math.ceil(SCENARIOS.length / 2);
-        if (index === halfway && !this.waterBreakShown) {
-            this.waterBreakShown = true;
-            this.showToast('Halfway there.', 'Water break — we mean it on the job, so we mean it here.', '💧');
-        }
 
         this.saveProgress();
     }
@@ -1078,9 +1029,8 @@ class HybridTraining {
             }
         }
 
-        // Create confetti + back the truck up to the dock
+        // Create confetti
         this.createConfetti();
-        setTimeout(() => this.truckReversePark(), 1600);
     }
 
     createConfetti() {

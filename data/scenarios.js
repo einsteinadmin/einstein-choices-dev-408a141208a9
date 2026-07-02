@@ -881,8 +881,8 @@ const ACHIEVEMENTS = {
     },
     perfectRun: {
         id: "perfectRun",
-        name: "The Perfect Move",
-        description: "All A-Player choices — every single scenario",
+        name: "Perfect Run",
+        description: "Get all A-Player choices in scenarios",
         icon: "⭐"
     },
     cultureChampion: {
@@ -899,9 +899,9 @@ const ACHIEVEMENTS = {
     },
     xpMaster: {
         id: "xpMaster",
-        name: "Certified Genius",
+        name: "XP Master",
         description: "Earn 800+ XP total",
-        icon: "🧠"
+        icon: "💎"
     },
     curiousMind: {
         id: "curiousMind",

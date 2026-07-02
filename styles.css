@@ -205,19 +205,7 @@ body {
     50% { transform: translateX(-50%) translateY(-2px); }
 }
 
-/* Finish-line flourish — the truck backs up to the dock */
-.truck-icon.reversing {
-    animation: truckReverse 2.4s ease;
-}
-
-@keyframes truckReverse {
-    0%   { transform: translateX(-50%); }
-    35%  { transform: translateX(calc(-50% - 16px)); }
-    65%  { transform: translateX(calc(-50% - 16px)); }
-    100% { transform: translateX(-50%); }
-}
-
-/* Honk bubble — appears above the truck on tap and at the finish */
+/* Honk bubble — appears above the truck on tap */
 .honk-bubble {
     position: absolute;
     bottom: 34px;
@@ -241,9 +229,6 @@ body {
     100% { opacity: 0; transform: translateX(-50%) translateY(-6px); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .truck-icon.reversing { animation: none; }
-}
 
 /* ===== Trust Bar — static, scrolls with content ===== */
 .trust-bar {
