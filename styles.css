@@ -1438,7 +1438,11 @@ body {
     margin-top: var(--space-lg);
     padding-top: var(--space-md);
     border-top: 1px solid var(--border-light);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
     color: var(--einstein-gray);
 }
 

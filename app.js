@@ -15,6 +15,11 @@ const VIDEO_CONFIG = {
 // Set to true once you've added real video IDs
 const VIDEOS_READY = true;
 
+// Gate the Continue buttons until each video has been watched to the end.
+// Fails OPEN: if YouTube's API can't load or a player errors, the buttons
+// unlock — a broken embed should never trap someone in the training.
+const VIDEO_GATE = true;
+
 // =====================================
 // MAIN APPLICATION
 // =====================================
@@ -31,7 +36,9 @@ class HybridTraining {
         this.scenarioScores = [];
         this.assessmentRatings = {};
         this.commitmentText = '';
+        this.watchedVideos = {};
         this.startTime = null;
+        this.ytPlayers = {};
 
         // Module mapping
         this.modules = [
@@ -76,6 +83,7 @@ class HybridTraining {
             scenarioScores: this.scenarioScores,
             assessmentRatings: this.assessmentRatings,
             commitmentText: this.commitmentText,
+            watchedVideos: this.watchedVideos,
             startTime: this.startTime
         };
         localStorage.setItem('einstein-hybrid-progress', JSON.stringify(state));
@@ -104,6 +112,8 @@ class HybridTraining {
                 this.embedVideo(key, videoId);
             }
         });
+
+        this.initVideoGate();
     }
 
     embedVideo(key, videoId) {
@@ -124,13 +134,80 @@ class HybridTraining {
         if (wrapper) {
             wrapper.innerHTML = `
                 <iframe
-                    src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1"
+                    id="yt-${key}"
+                    src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1"
                     title="${titleMap[key]}"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>
                 </iframe>
             `;
         }
+    }
+
+    // ===== Video Gate =====
+    // Continue buttons stay locked until each video plays to the end.
+    // Fails open on any player/API problem so nobody gets stuck.
+    initVideoGate() {
+        if (!VIDEO_GATE) return;
+
+        this.gateButtons = {
+            welcome: document.getElementById('completeWelcome'),
+            culture: document.getElementById('completeCulture'),
+            choices: document.getElementById('startScenarios')
+        };
+
+        // Lock buttons for videos not yet watched (watched state persists)
+        Object.entries(this.gateButtons).forEach(([key, btn]) => {
+            if (btn && !this.watchedVideos[key]) {
+                btn.dataset.unlockedText = btn.textContent.trim();
+                btn.disabled = true;
+                btn.textContent = 'Finish the video to continue';
+            }
+        });
+
+        // If the YouTube API never arrives, unlock everything
+        this.ytGateTimeout = setTimeout(() => this.releaseVideoGate('api-timeout'), 12000);
+
+        window.onYouTubeIframeAPIReady = () => {
+            clearTimeout(this.ytGateTimeout);
+            ['welcome', 'culture', 'choices'].forEach(key => {
+                if (!document.getElementById(`yt-${key}`)) return;
+                this.ytPlayers[key] = new YT.Player(`yt-${key}`, {
+                    events: {
+                        onStateChange: (e) => {
+                            if (e.data === YT.PlayerState.ENDED) this.markVideoWatched(key);
+                        },
+                        // A broken embed should never block the training
+                        onError: () => this.markVideoWatched(key)
+                    }
+                });
+            });
+        };
+
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        tag.onerror = () => this.releaseVideoGate('script-error');
+        document.head.appendChild(tag);
+    }
+
+    markVideoWatched(key) {
+        if (this.watchedVideos[key]) return;
+        this.watchedVideos[key] = true;
+        this.saveProgress();
+        this.unlockGateButton(key);
+    }
+
+    unlockGateButton(key) {
+        const btn = this.gateButtons?.[key];
+        if (btn && btn.disabled) {
+            btn.disabled = false;
+            btn.textContent = btn.dataset.unlockedText || 'Continue';
+        }
+    }
+
+    // Unlock all gate buttons without marking videos watched (fail-open path)
+    releaseVideoGate(reason) {
+        Object.keys(this.gateButtons || {}).forEach(key => this.unlockGateButton(key));
     }
 
     // ===== Easter Egg =====
@@ -296,9 +373,16 @@ class HybridTraining {
     }
 
     // ===== Module Navigation =====
-    // Stop all YouTube videos by resetting iframe src
+    // Pause videos on module switch. Use the player API when available
+    // (resetting iframe src would destroy the video-gate players); fall back
+    // to a src reset for any iframe without a bound player.
     pauseAllVideos() {
         document.querySelectorAll('.video-wrapper iframe').forEach(iframe => {
+            const key = iframe.id?.replace(/^yt-/, '');
+            const player = this.ytPlayers?.[key];
+            if (player && typeof player.pauseVideo === 'function') {
+                try { player.pauseVideo(); return; } catch (e) { /* fall through */ }
+            }
             const src = iframe.src;
             iframe.src = '';
             iframe.src = src;
@@ -896,18 +980,24 @@ class HybridTraining {
             container.appendChild(confetti);
         }
 
-        // Add keyframes if not exists
+        // Add keyframes if not exists — pieces fade out as they fall so they
+        // don't pile up on top of the page content
         if (!document.getElementById('confetti-styles')) {
             const style = document.createElement('style');
             style.id = 'confetti-styles';
             style.textContent = `
                 @keyframes confettiFall {
                     0% { transform: translateY(0) rotate(0deg); }
-                    100% { transform: translateY(100vh) rotate(720deg); }
+                    75% { opacity: inherit; }
+                    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
                 }
             `;
             document.head.appendChild(style);
         }
+
+        // Remove spent confetti from the DOM once the show is over
+        clearTimeout(this.confettiCleanup);
+        this.confettiCleanup = setTimeout(() => { container.innerHTML = ''; }, 8000);
     }
 }
 
