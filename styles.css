@@ -1416,6 +1416,24 @@ body {
     margin: var(--space-md) 0;
 }
 
+.cert-commitment {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--einstein-gray);
+    margin: var(--space-sm) auto;
+    max-width: 420px;
+}
+
+.commitment-echo {
+    font-style: italic;
+    color: var(--einstein-gray);
+    background: var(--orange-tint);
+    border-left: 3px solid var(--einstein-orange);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 4px;
+    margin-top: var(--space-sm);
+}
+
 .cert-values {
     margin-top: var(--space-lg);
     padding-top: var(--space-md);

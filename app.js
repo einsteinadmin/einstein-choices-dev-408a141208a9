@@ -30,6 +30,7 @@ class HybridTraining {
         this.achievements = [];
         this.scenarioScores = [];
         this.assessmentRatings = {};
+        this.commitmentText = '';
         this.startTime = null;
 
         // Module mapping
@@ -74,6 +75,7 @@ class HybridTraining {
             achievements: this.achievements,
             scenarioScores: this.scenarioScores,
             assessmentRatings: this.assessmentRatings,
+            commitmentText: this.commitmentText,
             startTime: this.startTime
         };
         localStorage.setItem('einstein-hybrid-progress', JSON.stringify(state));
@@ -202,9 +204,16 @@ class HybridTraining {
         });
 
         // Assessment
+        // Note: showModule(5) handles quiz init — calling initQuiz() here too
+        // double-counted quizAttempts and made Culture Champion unearnable
         document.getElementById('startQuiz')?.addEventListener('click', () => {
             this.showModule(5);
-            this.initQuiz();
+        });
+
+        // Persist the first-week commitment as it's typed
+        document.getElementById('commitmentText')?.addEventListener('input', (e) => {
+            this.commitmentText = e.target.value;
+            this.saveProgress();
         });
 
         // Quiz
@@ -275,6 +284,18 @@ class HybridTraining {
             // Quiz module - only init if not already in progress
             if (this.currentQuizQuestion === 0 && this.quizScore === 0) {
                 this.initQuiz();
+            } else {
+                // Resuming mid-quiz (e.g. after a page reload) — quizQuestions
+                // isn't persisted, so rebuild it and re-render where we left off
+                if (!this.quizQuestions) this.quizQuestions = [...QUIZ_QUESTIONS];
+                const totalQ = this.quizQuestions.length;
+                const totalScoreEl = document.getElementById('quizTotalScore');
+                const totalQEl = document.getElementById('quizTotalQ');
+                if (totalScoreEl) totalScoreEl.textContent = totalQ;
+                if (totalQEl) totalQEl.textContent = totalQ;
+                document.getElementById('quizResults').classList.add('hidden');
+                document.getElementById('quizContainer').classList.remove('hidden');
+                this.loadQuizQuestion();
             }
         } else if (index === 7) {
             this.showCompletion();
@@ -430,6 +451,10 @@ class HybridTraining {
             btn.addEventListener('click', (e) => this.handleScenarioChoice(e, scenario));
         });
 
+        // New scenario should start at the top — otherwise the reader lands
+        // mid-page on the answer buttons of a question they haven't read
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         this.saveProgress();
     }
 
@@ -450,17 +475,22 @@ class HybridTraining {
             }
         });
 
-        // Record score
-        this.scenarioScores.push({
+        // Record score — keyed by scenario so re-answering (via Previous or a
+        // reload) replaces the entry instead of duplicating it / re-earning XP
+        const existingIdx = this.scenarioScores.findIndex(s => s.scenarioId === scenario.id);
+        const record = {
             scenarioId: scenario.id,
             choiceId: choiceId,
             grade: choice.grade,
             xp: choice.xp
-        });
-
-        // Add XP
-        if (choice.xp > 0) {
-            this.addXP(choice.xp);
+        };
+        if (existingIdx >= 0) {
+            this.scenarioScores[existingIdx] = record;
+        } else {
+            this.scenarioScores.push(record);
+            if (choice.xp > 0) {
+                this.addXP(choice.xp);
+            }
         }
 
         // First choice achievement
@@ -483,6 +513,9 @@ class HybridTraining {
                 </button>
             </div>
         `;
+
+        // On phones the feedback renders below the fold — bring it into view
+        feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
         feedbackArea.querySelector('.btn').addEventListener('click', () => {
             if (isCorrect && scenario.proTip) {
@@ -543,6 +576,12 @@ class HybridTraining {
             grid.querySelectorAll('.rating-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => this.handleRating(e));
             });
+        }
+
+        // Restore saved commitment text
+        const commitmentEl = document.getElementById('commitmentText');
+        if (commitmentEl && this.commitmentText) {
+            commitmentEl.value = this.commitmentText;
         }
 
         // Apply saved ratings
@@ -652,7 +691,7 @@ class HybridTraining {
 
         document.getElementById('quizQuestionNum').textContent = this.currentQuizQuestion + 1;
         document.getElementById('quizScore').textContent = this.quizScore;
-        document.getElementById('quizProgressFill').style.width = `${((this.currentQuizQuestion) / 10) * 100}%`;
+        document.getElementById('quizProgressFill').style.width = `${((this.currentQuizQuestion) / this.quizQuestions.length) * 100}%`;
 
         const container = document.getElementById('quizContainer');
         container.innerHTML = `
@@ -725,11 +764,6 @@ class HybridTraining {
             if (this.quizAttempts === 1) {
                 this.unlockAchievement('cultureChampion');
             }
-
-            const elapsed = (Date.now() - this.startTime) / 1000 / 60;
-            if (elapsed < 20) {
-                this.unlockAchievement('speedDemon');
-            }
         } else {
             document.getElementById('retakeQuiz').classList.remove('hidden');
             document.getElementById('showCompletion').classList.add('hidden');
@@ -744,11 +778,6 @@ class HybridTraining {
 
     // ===== Completion =====
     showCompletion() {
-        // Show optional congrats video if configured
-        if (VIDEOS_READY && VIDEO_CONFIG.congrats && !VIDEO_CONFIG.congrats.startsWith('VIDEO_ID')) {
-            document.getElementById('congratsVideo').classList.remove('hidden');
-        }
-
         // Set date
         const now = new Date();
         document.getElementById('completionDate').textContent = now.toLocaleDateString('en-US', {
@@ -757,27 +786,31 @@ class HybridTraining {
             day: 'numeric'
         });
 
-        // Set stats
+        // Set stats — quizQuestions isn't persisted, so fall back to the
+        // source list when arriving here after a page reload
+        const quizTotal = (this.quizQuestions || QUIZ_QUESTIONS).length;
         document.getElementById('finalXP').textContent = this.xp;
-        document.getElementById('finalQuizScore').textContent = `${this.quizScore}/${this.quizQuestions.length}`;
+        document.getElementById('finalQuizScore').textContent = `${this.quizScore}/${quizTotal}`;
 
         // Calculate scenario grade
         const aCount = this.scenarioScores.filter(s => s.grade === 'A').length;
         const total = this.scenarioScores.length;
-        const percentage = Math.round((aCount / total) * 100);
-        document.getElementById('scenarioGrade').textContent = `${aCount}/${total} A's`;
+        document.getElementById('scenarioGrade').textContent = total > 0 ? `${aCount}/${total} A's` : '—';
 
-        // Show achievements
-        const grid = document.getElementById('achievementsGrid');
-        grid.innerHTML = Object.values(ACHIEVEMENTS).map(a => {
-            const earned = this.achievements.includes(a.id);
-            return `
-                <div class="achievement-badge ${earned ? '' : 'locked'}">
-                    <span>${a.icon}</span>
-                    <span>${a.name}</span>
-                </div>
-            `;
-        }).join('');
+        // Echo the first-week commitment — on the certificate and next steps
+        const commitment = (this.commitmentText || '').trim();
+        const certCommitment = document.getElementById('certCommitment');
+        const commitmentEcho = document.getElementById('commitmentEcho');
+        if (commitment) {
+            if (certCommitment) {
+                certCommitment.textContent = `First-week commitment: “${commitment}”`;
+                certCommitment.classList.remove('hidden');
+            }
+            if (commitmentEcho) {
+                commitmentEcho.textContent = `You already wrote yours: “${commitment}” — bring it to that conversation.`;
+                commitmentEcho.classList.remove('hidden');
+            }
+        }
 
         // Create confetti
         this.createConfetti();

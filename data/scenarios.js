@@ -23,7 +23,7 @@ What do you do?`,
 
 "Hey, I want to give you an honest update. We're running behind because [specific reason]. I want to make sure we do this right, not fast. Here's what I'm thinking for options..."
 
-The customer exhales. They can adjust their plans. The office is in the loop. Trust is built, not broken. THIS is communication done right.`,
+The customer exhales. They can adjust their plans. The office is in the loop. Trust builds instead of breaking — all because you spoke up early.`,
                 xp: 100
             },
             {
@@ -128,7 +128,7 @@ How do you move back to the truck?`,
                 id: "a",
                 text: "Jog back with purpose — quick but controlled, like a power walk with intention",
                 grade: "A",
-                feedback: `More ballet than football. THIS is hustle done right.
+                feedback: `More ballet than football.
 
 You're moving with urgency but staying controlled. You look professional. You're matching Marcus's pace. The customer sees a synchronized, efficient crew.
 
@@ -182,7 +182,7 @@ Your teammate is carrying the same load, same heat, same fatigue — but still m
                 id: "b",
                 text: "Match the pace you've had all day — controlled jog, purposeful movement. Take water breaks when you need them, but keep the energy consistent.",
                 grade: "A",
-                feedback: `THIS is what separates professionals. Anyone can hustle at 8 AM with fresh legs. Hustling at 5:30 when you're running on fumes? That's discipline.
+                feedback: `Anyone can hustle at 8 AM with fresh legs. Hustling at 5:30 when you're running on fumes? That's discipline.
 
 The customer notices. Your teammate notices. And when you're done, you'll be proud of how you finished — not just how you started. Sustainable means you can keep going safely — take your water breaks, watch for heat signs in yourself and your crew, but keep that controlled urgency all the way to the end.`,
                 xp: 100
@@ -236,9 +236,7 @@ The mess is STILL there. Your manager now has drama to deal with instead of a so
                 id: "c",
                 text: "Clean it up, organize the straps properly, and make a mental note to always leave it better than you found it",
                 grade: "A",
-                feedback: `THIS is ownership.
-
-You spend 10 minutes tidying up. The truck is ready for the day. When your crew lead arrives, they see a clean truck and a mover who takes pride in their equipment.
+                feedback: `You spend 10 minutes tidying up. The truck is ready for the day. When your crew lead arrives, they see a clean truck and a mover who takes pride in their equipment.
 
 "Treat it like you bought it yourself" isn't just about avoiding damage — it's about caring for the tools that make your job possible. Future crews will benefit from the standard you just set.`,
                 xp: 100
@@ -300,7 +298,7 @@ What do you do?`,
                 id: "a",
                 text: "Take a photo for yourself just in case, but don't say anything unless the customer brings it up",
                 grade: "B",
-                feedback: `The documentation instinct is smart. But you're preparing a defense instead of doing the right thing. If the customer finds it later, your photo proves you KNEW and didn't say anything. That's worse than no photo at all.
+                feedback: `A photo is smart. But you're preparing a defense instead of doing the right thing. If the customer finds it later, your photo proves you KNEW and didn't say anything. That's worse than no photo at all.
 
 Own it in the moment, not after the fact.`,
                 xp: 50
@@ -318,7 +316,7 @@ Ownership means you don't leave problems for other people to discover.`,
                 id: "c",
                 text: "Find your crew lead, show them the scuff, document it with a photo, and tell the customer together",
                 grade: "A",
-                feedback: `This is ownership at its core. You caused it, you own it, you address it. Your crew lead has your back because you didn't try to hide it. The customer respects the honesty. The claim process is clean.
+                feedback: `You caused it, you own it, you address it — in that order, right away. Your crew lead has your back because you didn't try to hide it. The customer respects the honesty. The claim process is clean.
 
 Ownership means the hardest conversations are the ones you have FIRST, not last.`,
                 xp: 100
@@ -352,9 +350,7 @@ Marcus notices. He always notices. He's deciding whether to invest his time ment
                 id: "b",
                 text: "\"Absolutely, show me! I want to get better at this.\"",
                 grade: "A",
-                feedback: `THIS is how pros are made.
-
-Marcus spends 3 minutes showing you a technique that takes 5 extra seconds but reduces mirror claims by half. You practice it right there. He nods approvingly.
+                feedback: `Marcus spends 3 minutes showing you a technique that takes 5 extra seconds but reduces mirror claims by half. You practice it right there. He nods approvingly.
 
 You just got better at your job. Tomorrow you'll be 1% better. Compound that over a year and you're operating at a completely different level. The best movers are always learning — even the veterans.`,
                 xp: 100
@@ -404,7 +400,7 @@ The gap between good and great isn't talent — it's whether you keep pushing wh
                 grade: "A",
                 feedback: `You just turned a good day into a learning moment. Your crew lead sees someone who doesn't coast on success — someone who's always looking for the 1% improvement.
 
-Even on your best days, there's always something to sharpen. That mindset compounds over time. A year from now, you're operating at a completely different level.`,
+Even on your best days, there's always something to sharpen. That mindset compounds — one small adjustment at a time.`,
                 xp: 100
             }
         ],
@@ -930,23 +926,11 @@ const ACHIEVEMENTS = {
         description: "Pass the final quiz on first try",
         icon: "🏆"
     },
-    legend: {
-        id: "legend",
-        name: "Legend",
-        description: "Complete the story sharing exercise",
-        icon: "📖"
-    },
     selfAware: {
         id: "selfAware",
         name: "Self-Aware",
         description: "Complete the honest self-assessment",
         icon: "🪞"
-    },
-    speedDemon: {
-        id: "speedDemon",
-        name: "Speed Demon",
-        description: "Complete training in under 15 minutes",
-        icon: "⚡"
     },
     xpMaster: {
         id: "xpMaster",
