@@ -192,7 +192,7 @@ body {
     width: auto;
     transform: translateX(-50%);
     z-index: 1;
-    pointer-events: none;
+    cursor: pointer;
     /* No CSS transition — JS handles the puttering animation */
 }
 
@@ -203,6 +203,46 @@ body {
 @keyframes truckBounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(-2px); }
+}
+
+/* Finish-line flourish — the truck backs up to the dock */
+.truck-icon.reversing {
+    animation: truckReverse 2.4s ease;
+}
+
+@keyframes truckReverse {
+    0%   { transform: translateX(-50%); }
+    35%  { transform: translateX(calc(-50% - 16px)); }
+    65%  { transform: translateX(calc(-50% - 16px)); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Honk bubble — appears above the truck on tap and at the finish */
+.honk-bubble {
+    position: absolute;
+    bottom: 34px;
+    transform: translateX(-50%);
+    background: var(--einstein-dark);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2;
+    animation: honkPop 1.4s ease forwards;
+}
+
+@keyframes honkPop {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(4px) scale(0.8); }
+    15%  { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    80%  { opacity: 1; }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .truck-icon.reversing { animation: none; }
 }
 
 /* ===== Trust Bar — static, scrolls with content ===== */
@@ -1448,6 +1488,13 @@ body {
 
 .cert-values strong {
     color: var(--einstein-orange);
+}
+
+.cert-fine-print {
+    margin-top: var(--space-md);
+    font-size: 0.65rem;
+    color: var(--einstein-gray);
+    opacity: 0.55;
 }
 
 .completion-actions {

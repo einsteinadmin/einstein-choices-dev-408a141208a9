@@ -45,41 +45,6 @@ The customer exhales. They can adjust their plans. The office is in the loop. Tr
         proTip: "The longer you wait to share a problem, the bigger it gets. Customers can handle honest updates — what they can't handle is surprises at the end."
     },
     {
-        id: 2,
-        value: "COMMUNICATE",
-        valueDescription: "clearly, professionally, and with kindness",
-        setup: `You're carrying a tall mirror down a hallway and the edge catches the doorframe, leaving a visible scuff on the trim. The customer is in the kitchen talking to your crew lead and didn't see it happen. Your teammate was behind you and saw the whole thing.
-
-What do you do?`,
-        choices: [
-            {
-                id: "a",
-                text: "Mention it to your crew lead and let them decide whether to tell the customer",
-                grade: "B",
-                feedback: `Good instinct to loop someone in. But you're passing the hard conversation to someone else. The customer respects the person who owns it directly. Your crew lead will appreciate you handling it — not dumping it on them.`,
-                xp: 50
-            },
-            {
-                id: "b",
-                text: "Say nothing — it's a tiny scuff and the customer probably won't notice for weeks",
-                grade: "C",
-                feedback: `Maybe they won't notice today. But they will eventually. And when they call to file a claim, there's no documentation, no context, and now it looks like you tried to hide it. Your teammate saw it happen — now they're wondering what kind of crew they're on. Silence isn't a strategy. It's a gamble.`,
-                xp: 0
-            },
-            {
-                id: "c",
-                text: "Tell the customer right away, document it, and report it to the office",
-                grade: "A",
-                feedback: `"Hey, I want to let you know — I caught the doorframe coming through with your mirror. There's a small scuff on the trim. I've already documented it and I'll report it to the office."
-
-The customer's reaction? Almost always: "Thanks for telling me." Honesty when no one's watching is the highest form of professionalism. That's what earns trust you can't buy.`,
-                xp: 100
-            }
-        ],
-        correctChoice: "c",
-        proTip: "Your reputation is built in the moments when no one's watching. One honest conversation about a scuff builds more trust than a hundred perfect moves."
-    },
-    {
         id: 3,
         value: "COMMUNICATE",
         valueDescription: "clearly, professionally, and with kindness",
@@ -916,8 +881,8 @@ const ACHIEVEMENTS = {
     },
     perfectRun: {
         id: "perfectRun",
-        name: "Perfect Run",
-        description: "Get all A-Player choices in scenarios",
+        name: "The Perfect Move",
+        description: "All A-Player choices — every single scenario",
         icon: "⭐"
     },
     cultureChampion: {
@@ -934,9 +899,9 @@ const ACHIEVEMENTS = {
     },
     xpMaster: {
         id: "xpMaster",
-        name: "XP Master",
+        name: "Certified Genius",
         description: "Earn 800+ XP total",
-        icon: "💎"
+        icon: "🧠"
     },
     curiousMind: {
         id: "curiousMind",

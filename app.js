@@ -37,6 +37,7 @@ class HybridTraining {
         this.assessmentRatings = {};
         this.commitmentText = '';
         this.watchedVideos = {};
+        this.waterBreakShown = false;
         this.startTime = null;
         this.ytPlayers = {};
 
@@ -84,6 +85,7 @@ class HybridTraining {
             assessmentRatings: this.assessmentRatings,
             commitmentText: this.commitmentText,
             watchedVideos: this.watchedVideos,
+            waterBreakShown: this.waterBreakShown,
             startTime: this.startTime
         };
         localStorage.setItem('einstein-hybrid-progress', JSON.stringify(state));
@@ -245,6 +247,40 @@ class HybridTraining {
         document.getElementById('closeEasterEgg')?.addEventListener('click', () => {
             document.getElementById('easterEggModal').classList.add('hidden');
         });
+
+        // Quieter second easter egg: tap the truck, get a honk
+        document.getElementById('truckIcon')?.addEventListener('click', () => this.honk());
+    }
+
+    honk() {
+        const truck = document.getElementById('truckIcon');
+        const container = document.querySelector('.truck-progress-container');
+        if (!truck || !container) return;
+
+        const lines = ['Honk! 📦', 'Beep beep!', 'Genius coming through.', 'Honk honk! 🧠'];
+        const bubble = document.createElement('div');
+        bubble.className = 'honk-bubble';
+        bubble.textContent = lines[Math.floor(Math.random() * lines.length)];
+        bubble.style.left = truck.style.left || '3%';
+        container.appendChild(bubble);
+        setTimeout(() => bubble.remove(), 1400);
+    }
+
+    // The finish-line flourish: the truck backs up to the dock on completion
+    truckReversePark() {
+        const truck = document.getElementById('truckIcon');
+        if (!truck || truck.classList.contains('reversing')) return;
+        truck.classList.add('reversing');
+
+        const container = document.querySelector('.truck-progress-container');
+        const bubble = document.createElement('div');
+        bubble.className = 'honk-bubble';
+        bubble.textContent = 'Beep... beep... beep...';
+        bubble.style.left = truck.style.left || '97%';
+        container?.appendChild(bubble);
+
+        setTimeout(() => bubble.remove(), 2400);
+        setTimeout(() => truck.classList.remove('reversing'), 2600);
     }
 
     // ===== Event Bindings =====
@@ -502,10 +538,16 @@ class HybridTraining {
 
     // ===== XP System =====
     addXP(amount) {
+        const before = this.xp;
         this.xp += amount;
         this.updateXPDisplay();
         this.showXPPopup(amount);
         this.saveProgress();
+
+        // Milestone quip at 500
+        if (before < 500 && this.xp >= 500) {
+            this.showToast('500 XP', "You could probably wrap a couch blindfolded by now. (Don't.)", '📦');
+        }
 
         if (this.xp >= 800) {
             this.unlockAchievement('xpMaster');
@@ -526,20 +568,26 @@ class HybridTraining {
         }, 1500);
     }
 
-    // ===== Achievements =====
+    // ===== Toasts & Achievements =====
+    showToast(title, message, icon = '🏆') {
+        const toast = document.getElementById('achievementToast');
+        toast.querySelector('.toast-icon').textContent = icon;
+        toast.querySelector('.toast-title').textContent = title;
+        document.getElementById('toastName').textContent = message;
+        toast.classList.remove('hidden');
+
+        clearTimeout(this._toastTimer);
+        this._toastTimer = setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 4500);
+    }
+
     unlockAchievement(id) {
         if (this.achievements.includes(id)) return;
 
         this.achievements.push(id);
         const achievement = ACHIEVEMENTS[id];
-
-        const toast = document.getElementById('achievementToast');
-        document.getElementById('toastName').textContent = `${achievement.icon} ${achievement.name}`;
-        toast.classList.remove('hidden');
-
-        setTimeout(() => {
-            toast.classList.add('hidden');
-        }, 4000);
+        this.showToast('Achievement Unlocked!', `${achievement.icon} ${achievement.name}`);
 
         this.saveProgress();
     }
@@ -597,6 +645,14 @@ class HybridTraining {
         // New scenario should start at the top — otherwise the reader lands
         // mid-page on the answer buttons of a question they haven't read
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // One-time water break at the halfway mark — we mean it on the job,
+        // so we mean it here
+        const halfway = Math.ceil(SCENARIOS.length / 2);
+        if (index === halfway && !this.waterBreakShown) {
+            this.waterBreakShown = true;
+            this.showToast('Halfway there.', 'Water break — we mean it on the job, so we mean it here.', '💧');
+        }
 
         this.saveProgress();
     }
@@ -895,7 +951,7 @@ class HybridTraining {
         const passed = this.quizScore >= passThreshold;
 
         document.getElementById('resultIcon').textContent = passed ? '🎉' : '📚';
-        document.getElementById('resultTitle').textContent = passed ? 'Congratulations!' : 'Almost There!';
+        document.getElementById('resultTitle').textContent = passed ? 'Heck yeah — you passed!' : 'Almost There!';
         document.getElementById('resultMessage').textContent = passed
             ? `You scored ${this.quizScore}/${total}! You've demonstrated a solid understanding of the CHOICES values.`
             : `You scored ${this.quizScore}/${total}. You need ${passThreshold}/${total} to pass. Review the values and try again!`;
@@ -955,8 +1011,9 @@ class HybridTraining {
             }
         }
 
-        // Create confetti
+        // Create confetti + back the truck up to the dock
         this.createConfetti();
+        setTimeout(() => this.truckReversePark(), 1600);
     }
 
     createConfetti() {
