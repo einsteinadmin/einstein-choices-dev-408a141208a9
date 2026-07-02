@@ -264,6 +264,71 @@ class HybridTraining {
         bubble.style.left = truck.style.left || '3%';
         container.appendChild(bubble);
         setTimeout(() => bubble.remove(), 1400);
+
+        this.honkSound();
+    }
+
+    // ===== Synthesized truck sounds (Web Audio — no files, fails silently) =====
+    getAudioCtx() {
+        try {
+            this._audioCtx = this._audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+            if (this._audioCtx.state === 'suspended') this._audioCtx.resume();
+            return this._audioCtx;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // Two-blast truck horn: a pair of sawtooth tones through a lowpass filter
+    honkSound() {
+        const ctx = this.getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        [0, 0.24].forEach(offset => {
+            const t = now + offset;
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 900;
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            [233, 311].forEach(freq => {
+                const osc = ctx.createOscillator();
+                osc.type = 'sawtooth';
+                osc.frequency.value = freq;
+                osc.connect(filter);
+                osc.start(t);
+                osc.stop(t + 0.2);
+            });
+
+            gain.gain.setValueAtTime(0.0001, t);
+            gain.gain.exponentialRampToValueAtTime(0.16, t + 0.02);
+            gain.gain.setValueAtTime(0.16, t + 0.13);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.19);
+        });
+    }
+
+    // Reverse-warning beeper: three short high sine beeps
+    backupBeeps() {
+        const ctx = this.getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        [0, 0.6, 1.2].forEach(offset => {
+            const t = now + offset;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 980;
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            gain.gain.setValueAtTime(0.0001, t);
+            gain.gain.exponentialRampToValueAtTime(0.08, t + 0.015);
+            gain.gain.setValueAtTime(0.08, t + 0.14);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.19);
+            osc.start(t);
+            osc.stop(t + 0.2);
+        });
     }
 
     // The finish-line flourish: the truck backs up to the dock on completion
@@ -278,6 +343,8 @@ class HybridTraining {
         bubble.textContent = 'Beep... beep... beep...';
         bubble.style.left = truck.style.left || '97%';
         container?.appendChild(bubble);
+
+        this.backupBeeps();
 
         setTimeout(() => bubble.remove(), 2400);
         setTimeout(() => truck.classList.remove('reversing'), 2600);
