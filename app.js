@@ -237,6 +237,62 @@ class HybridTraining {
         document.getElementById('restartTraining')?.addEventListener('click', () => {
             this.resetProgress();
         });
+
+        this.initDevNav(); // REVIEW COPY ONLY — not on the live deployment
+    }
+
+    // ===== DEV NAV — REVIEW COPY ONLY =====
+    initDevNav() {
+        const toggle = document.getElementById('devNavToggle');
+        const panel = document.getElementById('devNavPanel');
+        if (!toggle || !panel) return;
+
+        // Toggle panel visibility
+        toggle.addEventListener('click', () => {
+            panel.classList.toggle('hidden');
+            this.updateDevNavActive();
+        });
+
+        // Module jump buttons
+        document.querySelectorAll('.dev-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const moduleIndex = parseInt(btn.dataset.jump);
+                this.showModule(moduleIndex);
+                if (moduleIndex === 3) {
+                    this.loadScenario(0);
+                }
+                this.updateDevNavActive();
+            });
+        });
+
+        // Populate scenario dropdown
+        const select = document.getElementById('devScenarioJump');
+        if (select && typeof SCENARIOS !== 'undefined') {
+            SCENARIOS.forEach((s, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `${i + 1}. ${s.value} — ${s.setup.substring(0, 40).replace(/\n/g, ' ')}...`;
+                select.appendChild(opt);
+            });
+            select.addEventListener('change', (e) => {
+                const idx = parseInt(e.target.value);
+                if (!isNaN(idx)) {
+                    this.showModule(3);
+                    this.loadScenario(idx);
+                    select.value = '';
+                }
+            });
+        }
+
+        // Update active state when module changes
+        this.updateDevNavActive();
+    }
+
+    updateDevNavActive() {
+        document.querySelectorAll('.dev-nav-btn').forEach(btn => {
+            const moduleIndex = parseInt(btn.dataset.jump);
+            btn.classList.toggle('active', moduleIndex === this.currentModule);
+        });
     }
 
     // ===== Module Navigation =====
@@ -265,6 +321,9 @@ class HybridTraining {
         this.currentModule = index;
         this.updateProgress();
         this.saveProgress();
+
+        // Keep the dev-nav active state in sync (review copy only)
+        if (document.getElementById('devNav')) this.updateDevNavActive();
 
         // Update back button visibility
         document.querySelectorAll('.btn-back').forEach(btn => {
