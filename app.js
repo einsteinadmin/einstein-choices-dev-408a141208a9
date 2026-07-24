@@ -36,6 +36,7 @@ class HybridTraining {
         this.scenarioScores = [];
         this.assessmentRatings = {};
         this.commitmentText = '';
+        this.userName = '';
         this.watchedVideos = {};
         this.startTime = null;
         this.ytPlayers = {};
@@ -68,6 +69,42 @@ class HybridTraining {
         this.updateProgress();
         this.updateXPDisplay();
         this.showModule(this.currentModule);
+
+        const nameInput = document.getElementById('userName');
+        if (nameInput && this.userName) nameInput.value = this.userName;
+
+        if (this.resumePending) this.showResumePrompt();
+    }
+
+    // ===== Resume Prompt =====
+    // Progress lives in device-local storage with no login, so a saved run may
+    // belong to a previous trainee (or a manager's QA pass). Confirm identity
+    // before resuming instead of dropping the new person into someone else's
+    // nearly-finished training.
+    showResumePrompt() {
+        const esc = (s) => String(s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+        const firstName = esc((this.userName || '').trim().split(' ')[0] || '');
+
+        const overlay = document.createElement('div');
+        overlay.className = 'resume-modal';
+        overlay.innerHTML = `
+            <div class="resume-content" role="dialog" aria-modal="true" aria-labelledby="resumeTitle">
+                <div class="resume-icon">👋</div>
+                <h3 id="resumeTitle">${firstName ? `Welcome back, ${firstName}!` : 'Welcome back!'}</h3>
+                <p>This device has training in progress${firstName ? ` for <strong>${esc(this.userName)}</strong>` : ''}.
+                   If that's you, pick up where you left off. If not, start your own from the beginning.</p>
+                <div class="resume-actions">
+                    <button class="btn btn-primary" id="resumeContinue">${firstName ? `Continue as ${firstName}` : 'Continue'}</button>
+                    <button class="btn btn-secondary" id="resumeFresh">${firstName ? `Not ${firstName}? ` : ''}Start fresh</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        overlay.querySelector('#resumeContinue').addEventListener('click', () => overlay.remove());
+        overlay.querySelector('#resumeFresh').addEventListener('click', () => this.resetProgress());
     }
 
     // ===== Progress Management =====
@@ -83,6 +120,7 @@ class HybridTraining {
             scenarioScores: this.scenarioScores,
             assessmentRatings: this.assessmentRatings,
             commitmentText: this.commitmentText,
+            userName: this.userName,
             watchedVideos: this.watchedVideos,
             startTime: this.startTime
         };
@@ -94,6 +132,12 @@ class HybridTraining {
         if (saved) {
             const state = JSON.parse(saved);
             Object.assign(this, state);
+            // Saved runs belong to whoever used this device last — on shared
+            // branch computers that's often NOT the current trainee. Flag any
+            // meaningful progress so init() can ask "is this you?" instead of
+            // silently resuming someone else's run.
+            this.resumePending = this.currentModule > 0 || this.currentQuizQuestion > 0 ||
+                this.scenarioScores.length > 0 || this.xp > 0;
         }
     }
 
@@ -321,8 +365,23 @@ class HybridTraining {
         this.initEasterEgg();
 
         // Video module buttons
+        // Welcome requires a name — it keys the resume prompt on shared
+        // devices and prints on the certificate.
         document.getElementById('completeWelcome')?.addEventListener('click', () => {
+            const nameInput = document.getElementById('userName');
+            const name = (nameInput?.value || this.userName || '').trim();
+            if (!name) {
+                document.getElementById('userNameError')?.classList.remove('hidden');
+                nameInput?.focus();
+                return;
+            }
+            this.userName = name;
+            this.saveProgress();
             this.showModule(1);
+        });
+
+        document.getElementById('userName')?.addEventListener('input', () => {
+            document.getElementById('userNameError')?.classList.add('hidden');
         });
 
         document.getElementById('completeCulture')?.addEventListener('click', () => {
@@ -1002,6 +1061,13 @@ class HybridTraining {
             month: 'long',
             day: 'numeric'
         });
+
+        // Pre-fill the certificate with the name captured at welcome
+        // (still editable — e.g. to add a middle name)
+        const certNameInput = document.getElementById('certName');
+        if (certNameInput && !certNameInput.value && this.userName) {
+            certNameInput.value = this.userName;
+        }
 
         // Set stats — quizQuestions isn't persisted, so fall back to the
         // source list when arriving here after a page reload

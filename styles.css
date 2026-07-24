@@ -2031,3 +2031,94 @@ body {
 /* ============================================================== */
 /* END DEV NAV                                                    */
 /* ============================================================== */
+
+/* ===== Name Capture (Welcome module) ===== */
+.name-capture {
+    background: var(--blue-tint);
+    border: 1px solid var(--border-cool);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    text-align: center;
+}
+
+.name-label {
+    display: block;
+    font-weight: 700;
+    color: var(--einstein-gray);
+    margin-bottom: var(--space-sm);
+}
+
+.name-input {
+    font-family: var(--font-family);
+    font-size: 1.1rem;
+    color: var(--einstein-gray);
+    border: 2px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    background: var(--white);
+}
+
+.name-input:focus {
+    outline: none;
+    border-color: var(--einstein-blue);
+}
+
+.name-error {
+    color: var(--error);
+    font-weight: 500;
+    margin: var(--space-sm) 0 0;
+}
+
+.name-error.hidden {
+    display: none;
+}
+
+/* ===== Resume Prompt (shared-device guard) ===== */
+.resume-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(39, 52, 61, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: var(--space-lg);
+}
+
+.resume-content {
+    background: var(--white);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    max-width: 460px;
+    text-align: center;
+    animation: modalPop 0.3s ease;
+}
+
+.resume-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.resume-content h3 {
+    color: var(--einstein-gray);
+    margin-bottom: var(--space-sm);
+}
+
+.resume-content p {
+    color: var(--einstein-gray);
+    margin-bottom: var(--space-lg);
+}
+
+.resume-actions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
